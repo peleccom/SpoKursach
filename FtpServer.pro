@@ -4,19 +4,47 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 TARGET = FtpServer
 TEMPLATE = app
-
+LIBS += -lws2_32
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    user.cpp
+    ftpserver.cpp \
+    clientthread.cpp \
+    ftpcore.cpp \
+    log.cpp \
+    myutils.cpp \
+    ftpprotocol.cpp \
+    users.cpp
 
 HEADERS  += mainwindow.h \
-    user.h
+    ftpserver.h \
+    clientthread.h \
+    ftpcore.h \
+    log.h \
+    myutils.h \
+    ftpprotocol.h \
+    users.h
 
 FORMS    += mainwindow.ui
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
