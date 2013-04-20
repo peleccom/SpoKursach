@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/user_add.png</file>
+        <file>res/user_delete.png</file>
+        <file>res/user_edit.png</file>
+    </qresource>
+</RCC>

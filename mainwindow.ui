@@ -6,41 +6,150 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>361</height>
+    <width>652</width>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTextEdit" name="textlog">
-      <property name="readOnly">
-       <bool>true</bool>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <widget class="QPushButton" name="start">
-       <property name="text">
-        <string>Запуск сервера</string>
-       </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Лог</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QTextEdit" name="textlog">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QPushButton" name="start">
+            <property name="text">
+             <string>Запуск сервера</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="stop">
+            <property name="text">
+             <string>Остановить сервер</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="clearLogBtn">
+            <property name="text">
+             <string>Очистить лог</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
-      <widget class="QPushButton" name="stop">
-       <property name="text">
-        <string>Остановить сервер</string>
-       </property>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Пользователи</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Пользователи</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QToolButton" name="addUserButton">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/res/user_add.png</normaloff>:/res/user_add.png</iconset>
+           </property>
+          </widget>
+          <widget class="QToolButton" name="editUserButton">
+           <property name="text">
+            <string>...</string>
+           </property>
+          </widget>
+          <widget class="QToolButton" name="deleteUserButton">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/res/user_delete.png</normaloff>:/res/user_delete.png</iconset>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Пароль</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Группа</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
-      <widget class="QPushButton" name="clearLogBtn">
-       <property name="text">
-        <string>Очитстить лог</string>
-       </property>
+      <widget class="QWidget" name="tab_3">
+       <attribute name="title">
+        <string>Группы</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Группы</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidget_2">
+          <column>
+           <property name="text">
+            <string>Имя</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -51,8 +160,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
-     <height>20</height>
+     <width>652</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>
@@ -67,6 +176,8 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

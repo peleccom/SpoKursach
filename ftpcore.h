@@ -7,7 +7,7 @@
 #include <myutils.h>
 #define CONTROL_PORT 21
 #define MAX_CLIENTS 100
-
+#include <QList>
 
 class FTPCore : public QObject
 {
@@ -19,8 +19,8 @@ signals:
     void onshutdownserver();
     void onstarted();
     void onstopped();
-    void onerror(QString s);
-    void onnewconnection(QString ip);
+    void onerror(const QString& s);
+    void onnewconnection(const QString& ip);
 public slots:
      void run();
      void stop();

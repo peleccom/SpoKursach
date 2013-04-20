@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     log.cpp \
     myutils.cpp \
     ftpprotocol.cpp \
-    users.cpp
+    users.cpp \
+    edituserdialog.cpp
 
 HEADERS  += mainwindow.h \
     ftpserver.h \
@@ -27,9 +28,18 @@ HEADERS  += mainwindow.h \
     log.h \
     myutils.h \
     ftpprotocol.h \
-    users.h
+    users.h \
+    edituserdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    edituserdialog.ui
+
+RESOURCES += \
+    res.qrc
+
+
+
+
 
 
 

@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ftpServer, SIGNAL(onStarted(QString)), this, SLOT(eventHandler(QString)));
     connect(ftpServer, SIGNAL(onClose(QString)), this, SLOT(eventHandler(QString)));
     connect(ftpServer, SIGNAL(onEvent(QString)), this, SLOT(eventHandler(QString)));
+
+
+    connect(ui->addUserButton, SIGNAL(clicked()),SLOT(edituser()));
 }
 
 MainWindow::~MainWindow()
@@ -48,4 +51,13 @@ void MainWindow::closeEvent(QCloseEvent *event){
          ftpServer->stop();
     FTPProtocol::destroy();
     Users::destroy();
+}
+
+void MainWindow::edituser(){
+    QString user = "Alex";
+    QString pass = "Pass";
+    QString group = "group";
+    EditUserDialog *editdialog = new EditUserDialog(user, pass, group);
+    editdialog->exec();
+
 }

@@ -28,8 +28,8 @@ signals:
 public slots:
     void started();
     void stoped();
-    void newconnection(QString);
-    void servererror(QString);
+    void newconnection(const QString&);
+    void servererror(const QString&);
 
 private:
     STATUS mSTATUS;

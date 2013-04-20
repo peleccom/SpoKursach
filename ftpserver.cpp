@@ -15,10 +15,11 @@ void FtpServer::start(){
         mainthread = new QThread();
         ftpcore = new FTPCore();
         QObject::connect(mainthread, SIGNAL(started()), ftpcore, SLOT(run()));
+        QObject::connect(ftpcore, SIGNAL(onstopped()),mainthread,SLOT(quit()));
         QObject::connect(ftpcore, SIGNAL(onstarted()),  SLOT(started()));
         QObject::connect(ftpcore, SIGNAL(onstopped()), SLOT(stoped()));
-        QObject::connect(ftpcore, SIGNAL(onnewconnection(QString)), SLOT(newconnection(QString)));
-        QObject::connect(ftpcore, SIGNAL(onerror(QString)), SLOT(servererror(QString)));
+        QObject::connect(ftpcore, SIGNAL(onnewconnection(const QString&)), SLOT(newconnection(const QString&)));
+        QObject::connect(ftpcore, SIGNAL(onerror(const QString&)), SLOT(servererror(const QString&)));
         ftpcore->moveToThread(mainthread);
         mainthread->start();
         mSTATUS = STARTING;
@@ -50,20 +51,22 @@ void FtpServer::stoped(){
    emit onClose("Сервер остановлен");
    mSTATUS = STOPED;
    clients_count = 0;
+   mainthread->wait();
    delete ftpcore;
    delete mainthread;
    ftpcore = NULL;
    mainthread = NULL;
 }
 
-void FtpServer::newconnection(QString ip){
+void FtpServer::newconnection(const QString& ip){
     emit onEvent("Новое подключение ip: " + ip);
     clients_count ++;
 }
 
 
-void FtpServer::servererror(QString s){
-    qDebug() << s;
+void FtpServer::servererror(const QString& s){
+    qDebug() << "Error - "+s;
+    emit onError(s);
     mSTATUS =  STOPED;
 }
 

@@ -11,15 +11,20 @@ FTPCore::~FTPCore(){
 
 void FTPCore::run(){
     ClientThread *clientthread;
+    QList<ClientThread*> connections;
     if (!InitWinsock())
     {
         emit onerror("WinSock init failed");
+        qDebug() << "Winsock stopped";
+        emit onstopped();
         return;
     }
-    if ((msocket=socket(AF_INET,SOCK_STREAM,0))<0)
+    if ( SOCKET_ERROR == (msocket=socket(AF_INET,SOCK_STREAM,0)))
         {
-          emit onerror("Error socket " + WSAGetLastError());
+          emit onerror("Error socket " + QString("%1").arg(WSAGetLastError()));
           WSACleanup();
+          qDebug() << "Winsock stopped";
+          emit onstopped();
           return;
         }
 
@@ -27,30 +32,34 @@ void FTPCore::run(){
     local_addr.sin_family=AF_INET;
     local_addr.sin_port=htons(CONTROL_PORT);
     local_addr.sin_addr.s_addr=0;
-
     // вызываем bind для связывания
-    if (bind(msocket,(sockaddr *) &local_addr, sizeof(local_addr)))
+    if (SOCKET_ERROR == bind(msocket,(sockaddr *) &local_addr, sizeof(local_addr)))
     {
-          emit onerror("Error bind "+WSAGetLastError());
+
+          emit onerror("Error bind " + QString("%1").arg(WSAGetLastError()));
           closesocket(msocket);
           WSACleanup();
+          qDebug() << "Winsock stopped";
+          emit onstopped();
           return;
         }
 
      if (listen(msocket, MAX_CLIENTS))
         {
           // Ошибка
-          emit onerror("Error listen "+WSAGetLastError());
+          emit onerror("Error listen " + QString("%1").arg(WSAGetLastError()));
           closesocket(msocket);
           WSACleanup();
+          emit onstopped();
+          qDebug() << "Winsock stopped";
           return;
         }
 
         SOCKET client_socket;    // сокет для клиента
         sockaddr_in client_addr;    // адрес клиента
         int client_addr_size=sizeof(client_addr);
-
-        ioctlsocket(msocket, FIONBIO,(unsigned long* ) 1);
+        u_long flag = 1;
+        ioctlsocket(msocket, FIONBIO, &flag);
         fd_set read_s; // Множество
         timeval time_out; // Таймаут
         int res;
@@ -65,6 +74,8 @@ void FTPCore::run(){
                 emit onerror("Select error in FTPCore");
                 closesocket(msocket);
                 WSACleanup();
+                qDebug() << "Winsock stopped";
+                emit onstopped();
                 return;
             }
 
@@ -77,13 +88,22 @@ void FTPCore::run(){
                 emit onnewconnection(inet_ntoa(client_addr.sin_addr));
 
                 clientthread = new ClientThread(client_socket);
-               QObject::connect(this, SIGNAL(onshutdownserver()),clientthread, SLOT(closeconnection()));
+                connections.append(clientthread);
                  clientthread->start();
            }
             if (terminated){
                 break;
             }
         }
+        foreach(ClientThread *client , connections)
+        {
+            client->closeconnection();
+            qDebug() << "Close connection";
+           //client->wait();
+            qDebug() << "wait";
+            delete client;
+        }
+
         closesocket(msocket);
         if (WSACleanup() != 0){
             emit onerror("WSACleanup failed");
@@ -96,6 +116,7 @@ void FTPCore::run(){
 
 void FTPCore::stop(){
     terminated = true;
+    emit onshutdownserver();
 }
 
 bool FTPCore::InitWinsock(){

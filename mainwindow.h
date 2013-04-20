@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <ftpserver.h>
+#include <edituserdialog.h>
 #include <log.h>
 namespace Ui {
     class MainWindow;
@@ -27,6 +28,7 @@ public slots:
     void on_start_clicked();
      void on_stop_clicked();
      void addlog(QString s);
+     void edituser();
 protected:
      void closeEvent(QCloseEvent *event);
 };

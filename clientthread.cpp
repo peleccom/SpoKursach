@@ -11,25 +11,20 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
 
 
 void ClientThread::run(){
-    char buff[20*1024];
-    QByteArray bytearray;
-int bytes_recv;
+    qDebug() << "Thread id=" << QThread::currentThreadId();
     // отправл€ем клиенту приветствие
     sendString(FTPProtocol::getInstance()->getResponse(220,""), msocket);
-    // цикл эхо-сервера: прием строки от клиента и
-    // возвращение ее клиенту
-    while(
-          ( bytes_recv=recv(msocket,&buff[0],sizeof(buff),0))
-              && bytes_recv !=SOCKET_ERROR)
-      //send(msocket,&buff[0],bytes_recv,0);
+    QString s = recvString();
+    qDebug() << "'"<<s << "'";
+    QByteArray array (s.toStdString().c_str());
+    analizeCommand(array);
+    while(true)
     {
-        buff[bytes_recv] = '\0';
-        qDebug() << buff;
-        bytearray = QByteArray(buff, bytes_recv);
-        analizeCommand(bytearray);
+
         if (terminated){
             break;
         }
+        sleep(200);
     }
     // если мы здесь, то произошел выход из цикла по
     // причине возращени€ функцией recv ошибки Ц
@@ -39,6 +34,7 @@ int bytes_recv;
 
     // закрываем сокет
     closesocket(msocket);
+    qDebug() << "Close client";
 }
 
 void ClientThread::closeconnection(){
@@ -51,10 +47,25 @@ int ClientThread::sendString(QString mes, SOCKET sock){
     return send(sock,mes.toAscii().data(),mes.length(),0);
 }
 
+QString ClientThread::recvString(){
+      char buff[BUF_LENGTH];
+      int bytesreaded;
+      bytesreaded = recv(msocket,buff, BUF_LENGTH,0);
+      qDebug() << bytesreaded;
+      if (bytesreaded != SOCKET_ERROR){
+          buff[bytesreaded] = '\0';
+          return QString(buff);
+      }
+      else
+      {
+          qDebug() << "Error listen " + QString("%1").arg(WSAGetLastError()) ;
+      }
+      return NULL;
+}
+
 void ClientThread::analizeCommand(QByteArray &bytearray){
     QString user;
     if (bytearray.contains("USER")) {
-        qDebug() << "USER";
         QRegExp rx("^USER\\s(.*)\r\n");
         rx.indexIn(bytearray);
         user = rx.cap(1);
