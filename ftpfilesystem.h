@@ -4,7 +4,7 @@
 #include <QDir>
 #include <QStringBuilder>
 #include <QDateTime>
-//#include <QFile>
+#include <QFile>
 class FtpFileSystem
 {
 public:
@@ -14,7 +14,7 @@ public:
     bool cdUp();
     bool changeDir(const QString & subfolder);
     QString getWorkingDirectory();
-    //QFile readFile(const QString &filename);
+    QString getFile(const QString &filename);
 private:
     QString curDir;
     QString baseDir;

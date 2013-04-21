@@ -256,15 +256,15 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(bytearray);
             QString filename = rx.cap(1);
             sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-           // transferFile(ftpFileSystem->readFile(filename));
+            transferFile(ftpFileSystem->getFile(filename));
             sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
             return;
         }
     }
    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
 }
-/*
-    void ClientThread::transferFile(QFile f){
+
+    void ClientThread::transferFile(const QString &filename){
         struct hostent *hp;
         unsigned int addr;
         struct sockaddr_in server;
@@ -272,13 +272,13 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         conn=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
         if(conn==INVALID_SOCKET)
                 return;
-                if(inet_addr(servername.toAscii().data())==INADDR_NONE)
+                if(inet_addr(active_addr.toAscii().data())==INADDR_NONE)
         {
-                hp=gethostbyname(servername.toAscii().data());
+                hp=gethostbyname(active_addr.toAscii().data());
         }
         else
         {
-                addr=inet_addr(servername.toAscii().data());
+                addr=inet_addr(active_addr.toAscii().data());
                 hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
         }
         if(hp==NULL)
@@ -288,7 +288,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
         server.sin_family=AF_INET;
-        server.sin_port=htons(port);
+        server.sin_port=htons(active_port);
         if(::connect(conn,(struct sockaddr*)&server,sizeof(server)))
         {
                 closesocket(conn);
@@ -296,6 +296,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         char buff[1024];
         int bytesReaded;
+        QFile f(filename);
         f.open(QIODevice::ReadOnly);
         while( (bytesReaded = f.read(buff,1024)) && (bytesReaded != -1))
         {
@@ -305,7 +306,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         shutdown(conn,SD_BOTH);
         closesocket(conn);
     }
-*/
+
    ClientThread::~ClientThread()
    {
        delete ftpFileSystem;

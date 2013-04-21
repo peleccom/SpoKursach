@@ -69,8 +69,7 @@ bool FtpFileSystem::changeDir(const QString &subfolder){
     }
 }
 
-/*QFile FtpFileSystem::readFile(const QString& filename)
+QString FtpFileSystem::getFile(const QString& filename)
 {
-    QFile f(appendPath(curDir,filename));
-    return f;
-}*/
+    return  appendPath(baseDir,appendPath(curDir,filename));
+}
