@@ -24,6 +24,7 @@ private:
     bool terminated;
     bool mIsUserAuthenticated;
     bool isActiveMode;
+    bool isUTF8;
     QString type;
     QString workingDirectory;
     QCryptographicHash *hash;
@@ -35,8 +36,10 @@ private:
     void analizeCommand(QByteArray&);
     bool isAuthenticated();
     void setAuthenticated(bool);
-    void newconnection(QString & anndr, int port);
+    void sendList(QString & anndr, int port);
     void transferFile(const QString &filename);
+    QByteArray toEncoding(const QString& s);
+    QString fromEncoding(const QByteArray& s);
 };
 
 #endif // CLIENTTHREAD_H

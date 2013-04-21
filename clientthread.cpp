@@ -9,6 +9,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     hash = new QCryptographicHash(QCryptographicHash::Md5);
     workingDirectory = "/";
     ftpFileSystem = NULL;
+    isUTF8 = false;
 }
 
 
@@ -61,7 +62,7 @@ int ClientThread::sendString(QString mes, SOCKET sock){
     return send(sock,mes.toAscii().data(),mes.length(),0);
 }
 
-void ClientThread::newconnection(QString &servername, int port)
+void ClientThread::sendList(QString &servername, int port)
 {
     WSADATA wsaData;
     struct hostent *hp;
@@ -97,7 +98,7 @@ void ClientThread::newconnection(QString &servername, int port)
     int z;
     QString s;
     s = ftpFileSystem->listDir();
-    send(conn,s.toAscii().data(), s.size(),0);
+    send(conn,toEncoding(s).data(), s.size(),0);
     shutdown(conn,SD_BOTH);
     closesocket(conn);
 }
@@ -186,6 +187,18 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("OPTS")){
+            QRegExp rx("^OPTS ([\\w\\s]+)");
+            rx.indexIn(bytearray);
+            QRegExp rx2("^UTF8 (\\w+)");
+            rx2.indexIn(rx.cap(1));
+            if (rx2.cap(1) == "ON")
+            {
+                isUTF8 = true;
+            }
+            if (rx2.cap(1) == "OFF")
+            {
+                isUTF8 = false;
+            }
             sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
             return;
         }
@@ -216,7 +229,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
 
         if (bytearray.contains("LIST")){
             sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-            newconnection(active_addr,active_port);
+            sendList(active_addr,active_port);
             sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
             return;
         }
@@ -253,7 +266,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         if (bytearray.contains("RETR")){
             QRegExp rx("^RETR\\s(.*)\r\n");
-            rx.indexIn(bytearray);
+            rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
             transferFile(ftpFileSystem->getFile(filename));
@@ -313,4 +326,16 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
 
    }
 
+   QByteArray ClientThread::toEncoding(const QString &s)
+   {
+       if (isUTF8)
+           return s.toUtf8();
+       return s.toAscii();
 
+   }
+
+   QString ClientThread::fromEncoding(const QByteArray &s){
+       if(isUTF8)
+           return QString::fromUtf8(s.data());
+                   return QString::fromAscii(s.data());
+   }
