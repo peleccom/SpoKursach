@@ -60,7 +60,7 @@ bool Users::isUser(const QString &user){
     }
     return false;
 }
-
+// return id of user
 int Users::id(const QString &user){
     QStringList list = allKeys();
 

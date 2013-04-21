@@ -19,11 +19,17 @@ public slots:
 private:
     SOCKET msocket;
     bool terminated;
+    bool mIsUserAuthenticated;
+    QString workingDirectory;
     QCryptographicHash *hash;
+    QString active_addr;
+    int active_port;
     int sendString(QString mes, SOCKET sock);
     QString recvString();
     void analizeCommand(QByteArray&);
-
+    bool isAuthenticated();
+    void setAuthenticated(bool);
+    void newconnection(QString & anndr, int port);
 };
 
 #endif // CLIENTTHREAD_H

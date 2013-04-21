@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     myutils.cpp \
     ftpprotocol.cpp \
     users.cpp \
-    edituserdialog.cpp
+    edituserdialog.cpp \
+    clientrecvexception.cpp
 
 HEADERS  += mainwindow.h \
     ftpserver.h \
@@ -29,13 +30,20 @@ HEADERS  += mainwindow.h \
     myutils.h \
     ftpprotocol.h \
     users.h \
-    edituserdialog.h
+    edituserdialog.h \
+    clientrecvexception.h
 
 FORMS    += mainwindow.ui \
     edituserdialog.ui
 
 RESOURCES += \
     res.qrc
+
+
+
+
+
+
 
 
 
