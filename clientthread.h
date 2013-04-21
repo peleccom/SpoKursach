@@ -4,12 +4,14 @@
 #include <QThread>
 #include <myutils.h>
 #include <QCryptographicHash>
+#include <ftpfilesystem.h>
 #define BUF_LENGTH 1024
 class ClientThread : public QThread
 {
     Q_OBJECT
 public:
     explicit ClientThread(SOCKET client_socket, QObject *parent = 0);
+    ~ClientThread();
     void run();
 
 signals:
@@ -23,6 +25,7 @@ private:
     QString workingDirectory;
     QCryptographicHash *hash;
     QString active_addr;
+    FtpFileSystem *ftpFileSystem;
     int active_port;
     int sendString(QString mes, SOCKET sock);
     QString recvString();

@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     ftpprotocol.cpp \
     users.cpp \
     edituserdialog.cpp \
-    clientrecvexception.cpp
+    clientrecvexception.cpp \
+    ftpfilesystem.cpp
 
 HEADERS  += mainwindow.h \
     ftpserver.h \
@@ -31,13 +32,16 @@ HEADERS  += mainwindow.h \
     ftpprotocol.h \
     users.h \
     edituserdialog.h \
-    clientrecvexception.h
+    clientrecvexception.h \
+    ftpfilesystem.h
 
 FORMS    += mainwindow.ui \
     edituserdialog.ui
 
 RESOURCES += \
     res.qrc
+
+
 
 
 

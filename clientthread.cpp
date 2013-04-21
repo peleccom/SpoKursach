@@ -8,6 +8,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     setAuthenticated(false);
     hash = new QCryptographicHash(QCryptographicHash::Md5);
     workingDirectory = "/";
+    ftpFileSystem = NULL;
 }
 
 
@@ -95,6 +96,17 @@ void ClientThread::newconnection(QString &servername, int port)
     char buff[512];
     int z;
     QString s("-rwxr--r--  1   owner   group 640   1970 01 01  test\n-rwxr--r--  1   owner   group 13440 1970 01 01  test.html\n-rwxr--r--  1   owner   group 512   1970 01 01  test2.txt");
+    s = "03.04.2013  00:39    <DIR>          .android\n13.03.2013  16:57    <DIR>          .androvm\n02.02.2013  02:53               794 .appcfg_cookies\n07.02.2013  01:16                41 .appcfg_nag";
+
+    s = "26.07.2012  16:36    <DIR>          Music\n"
+            "04.04.2013  17:30    <DIR>          Pictres\n"
+            "18.12.2012  07:56             1 051 pspp.jnl\n"
+            "19.03.2013  03:56            50 456 qms-bmh1.bmp\n"
+            "19.03.2013  03:56            16 924 qms-bmh2.bmp\n"
+            "19.03.2013  03:56            16 920 qms-bmh3.bmp\n"
+            "12.03.2013  00:50               680 quartus2.ini\n"
+            "19.02.2013  16:32                27 quartus2.qreg\n";
+    s = ftpFileSystem->listDir();
     send(conn,s.toAscii().data(), s.size(),0);
     shutdown(conn,SD_BOTH);
     closesocket(conn);
@@ -152,6 +164,9 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             // logged in
              sendString(FTPProtocol::getInstance()->getResponse(230), msocket);
              setAuthenticated(true);
+             if (ftpFileSystem != NULL)
+                delete ftpFileSystem;
+             ftpFileSystem = new FtpFileSystem("fake");
         } else {
             // incorrect
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
@@ -177,7 +192,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("PWD")){
-            sendString(FTPProtocol::getInstance()->getResponse(257, "\""+workingDirectory+"\""), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(257, "\""+ftpFileSystem->getWorkingDirectory()+"\""), msocket);
             return;
         }
         if (bytearray.contains("OPTS")){
@@ -215,5 +230,39 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             terminate();
             return;
         }
+        if (bytearray.contains("DELE")){
+            // TODO
+            QRegExp rx("^DELE\\s(.*)\r\n");
+            rx.indexIn(bytearray);
+            QString filename = rx.cap(1);
+            qDebug() << "request to delete "<< filename;
+            sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
+            return;
+        }
+        if (bytearray.contains("CDUP")){
+            if (ftpFileSystem->cdUp())
+                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            return;
+        }
+        if (bytearray.contains("CWD")){
+            QRegExp rx("^CWD\\s(.*)\r\n");
+            rx.indexIn(bytearray);
+            QString subFolder = rx.cap(1);
+            if (ftpFileSystem->changeDir(subFolder))
+                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            return;
+        }
     }
+   sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
 }
+   ClientThread::~ClientThread()
+   {
+       delete ftpFileSystem;
+
+   }
+
+
