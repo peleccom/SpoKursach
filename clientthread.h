@@ -5,6 +5,7 @@
 #include <myutils.h>
 #include <QCryptographicHash>
 #include <ftpfilesystem.h>
+//#include <QFile>
 #define BUF_LENGTH 1024
 class ClientThread : public QThread
 {
@@ -22,6 +23,8 @@ private:
     SOCKET msocket;
     bool terminated;
     bool mIsUserAuthenticated;
+    bool isActiveMode;
+    QString type;
     QString workingDirectory;
     QCryptographicHash *hash;
     QString active_addr;
@@ -33,6 +36,6 @@ private:
     bool isAuthenticated();
     void setAuthenticated(bool);
     void newconnection(QString & anndr, int port);
-};
+    //void transferFile(QFile f);
 
 #endif // CLIENTTHREAD_H

@@ -95,17 +95,7 @@ void ClientThread::newconnection(QString &servername, int port)
     }
     char buff[512];
     int z;
-    QString s("-rwxr--r--  1   owner   group 640   1970 01 01  test\n-rwxr--r--  1   owner   group 13440 1970 01 01  test.html\n-rwxr--r--  1   owner   group 512   1970 01 01  test2.txt");
-    s = "03.04.2013  00:39    <DIR>          .android\n13.03.2013  16:57    <DIR>          .androvm\n02.02.2013  02:53               794 .appcfg_cookies\n07.02.2013  01:16                41 .appcfg_nag";
-
-    s = "26.07.2012  16:36    <DIR>          Music\n"
-            "04.04.2013  17:30    <DIR>          Pictres\n"
-            "18.12.2012  07:56             1 051 pspp.jnl\n"
-            "19.03.2013  03:56            50 456 qms-bmh1.bmp\n"
-            "19.03.2013  03:56            16 924 qms-bmh2.bmp\n"
-            "19.03.2013  03:56            16 920 qms-bmh3.bmp\n"
-            "12.03.2013  00:50               680 quartus2.ini\n"
-            "19.02.2013  16:32                27 quartus2.qreg\n";
+    QString s;
     s = ftpFileSystem->listDir();
     send(conn,s.toAscii().data(), s.size(),0);
     shutdown(conn,SD_BOTH);
@@ -166,7 +156,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
              setAuthenticated(true);
              if (ftpFileSystem != NULL)
                 delete ftpFileSystem;
-             ftpFileSystem = new FtpFileSystem("fake");
+             ftpFileSystem = new FtpFileSystem("/");
         } else {
             // incorrect
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
@@ -201,10 +191,15 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         if (bytearray.contains("TYPE")){
             // set transfer type
+            QRegExp rx("^TYPE (\\w)( (\\w))?");
+            rx.indexIn(bytearray);
+            qDebug() << "type" << rx.cap(1) << rx.cap(3);
+            type = rx.cap(1);
             sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
             return;
         }
         if (bytearray.contains("PORT")){
+            isActiveMode = true;
             QRegExp rx("^PORT (\\d+),(\\d+),(\\d+),(\\d+),(\\d+),(\\d+)");
             rx.indexIn(bytearray);
             int p1,p2;
@@ -256,9 +251,61 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                 sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
             return;
         }
+        if (bytearray.contains("RETR")){
+            QRegExp rx("^RETR\\s(.*)\r\n");
+            rx.indexIn(bytearray);
+            QString filename = rx.cap(1);
+            sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+           // transferFile(ftpFileSystem->readFile(filename));
+            sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+            return;
+        }
     }
    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
 }
+/*
+    void ClientThread::transferFile(QFile f){
+        struct hostent *hp;
+        unsigned int addr;
+        struct sockaddr_in server;
+        SOCKET conn;
+        conn=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+        if(conn==INVALID_SOCKET)
+                return;
+                if(inet_addr(servername.toAscii().data())==INADDR_NONE)
+        {
+                hp=gethostbyname(servername.toAscii().data());
+        }
+        else
+        {
+                addr=inet_addr(servername.toAscii().data());
+                hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
+        }
+        if(hp==NULL)
+        {
+                closesocket(conn);
+                return;
+        }
+        server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
+        server.sin_family=AF_INET;
+        server.sin_port=htons(port);
+        if(::connect(conn,(struct sockaddr*)&server,sizeof(server)))
+        {
+                closesocket(conn);
+                return;
+        }
+        char buff[1024];
+        int bytesReaded;
+        f.open(QIODevice::ReadOnly);
+        while( (bytesReaded = f.read(buff,1024)) && (bytesReaded != -1))
+        {
+            send(conn,buff,bytesReaded,0);
+        }
+        f.close();
+        shutdown(conn,SD_BOTH);
+        closesocket(conn);
+    }
+*/
    ClientThread::~ClientThread()
    {
        delete ftpFileSystem;
