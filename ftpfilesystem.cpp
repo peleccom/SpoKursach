@@ -4,8 +4,7 @@ FtpFileSystem::FtpFileSystem(const QString &basedir)
 {
 
     this->baseDir = basedir;
-        this->curDir = "/";
-    this->baseDir = "C:";
+    this->curDir = "/";
 }
 
 QString FtpFileSystem::appendPath(const QString& path1, const QString& path2)
@@ -93,4 +92,17 @@ bool FtpFileSystem::mkDir(const QString &filename){
      QString fullDirPath = getFile(filename);
      QDir dir;
      return dir.mkdir(fullDirPath);
+}
+
+bool FtpFileSystem::getSize(const QString &filename,qint64 *size )
+{
+        QString fullFileName = getFile(filename);
+        QFile f(fullFileName);
+        if (f.exists())
+        {
+            *size = f.size();
+            return true;
+        }
+        return false;
+
 }

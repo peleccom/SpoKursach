@@ -17,6 +17,7 @@ public:
     QString getFile(const QString &filename);
     bool deleteFile(const QString &filename);
     bool mkDir(const QString &filename);
+    bool getSize(const QString &filename, qint64 *size);
 private:
     QString curDir;
     QString baseDir;

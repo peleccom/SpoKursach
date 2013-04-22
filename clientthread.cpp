@@ -32,7 +32,7 @@ void ClientThread::run(){
     while(true)
     {
         QString s = recvString();
-        qDebug() << "Command received: '"<<s << "'";
+        qDebug() << "<<" << s.trimmed();
         if (s == NULL)
             break;
         QByteArray array (s.toStdString().c_str());
@@ -60,6 +60,7 @@ void ClientThread::closeconnection(){
 int ClientThread::sendString(QString mes, SOCKET sock){
     if (!mes.endsWith("\r\n"))
         mes += "\r\n";
+    qDebug() << ">>" << mes.trimmed();
     return send(sock,mes.toAscii().data(),mes.length(),0);
 }
 
@@ -133,7 +134,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
              setAuthenticated(true);
              if (ftpFileSystem != NULL)
                 delete ftpFileSystem;
-             ftpFileSystem = new FtpFileSystem("/");
+             ftpFileSystem = new FtpFileSystem("D:/Films");
         } else {
             // incorrect
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
@@ -270,6 +271,21 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         if (bytearray.contains("PASV")){
             isActiveMode = false;
             selectPassivePort();
+            return;
+        }
+        if (bytearray.contains("SIZE")){
+            QRegExp rx("^SIZE\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString fileName = rx.cap(1);
+            qint64 size;
+            if (ftpFileSystem->getSize(fileName, &size))
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(250, QString::number(size)), msocket);
+            }
+            else
+            {
+               sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            }
             return;
         }
 
