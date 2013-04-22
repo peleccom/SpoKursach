@@ -10,6 +10,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     workingDirectory = "/";
     ftpFileSystem = NULL;
     isUTF8 = false;
+    passiveDataSocket = INVALID_SOCKET;
 }
 
 
@@ -62,9 +63,10 @@ int ClientThread::sendString(QString mes, SOCKET sock){
     return send(sock,mes.toAscii().data(),mes.length(),0);
 }
 
-void ClientThread::sendList(QString &servername, int port)
+void ClientThread::sendList()
 {
-    SOCKET conn = openDataConnection();
+    SOCKET conn;
+    conn  = openDataConnection();
     if (conn == INVALID_SOCKET)
     {
         sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
@@ -203,7 +205,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
 
         if (bytearray.contains("LIST")){
             sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-            sendList(active_addr,active_port);
+            sendList();
             sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
             return;
         }
@@ -265,6 +267,11 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                 sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
             return;
         }
+        if (bytearray.contains("PASV")){
+            isActiveMode = false;
+            selectPassivePort();
+            return;
+        }
 
     }
    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
@@ -291,7 +298,16 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         closesocket(conn);
         sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
     }
+    QString getAddrFormat(QString ip, int port){
+        int lowpartport = port % 256;
+        int highpartport = port / 256;
+        QRegExp rx("(\\d+).(\\d+).(\\d+).(\\d+).(\\d+).(\\d+)");
+        rx.indexIn(ip);
+       // return QString("(%1,%2,%3,%4,%5,%6").arg(rx.cap(1)).arg(rx.cap(2)).arg(rx.cap(3)).arg(rx.cap(4)).
+       //         arg(highpartport).arg(lowpartport);
+        return QString("(127,0,0,1,%5,%6)").arg(highpartport).arg(lowpartport);
 
+    }
     void ClientThread::recvFile(const QString &filename){
 
         SOCKET conn = openDataConnection();
@@ -371,6 +387,50 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
        }
        else
        {
-           return INVALID_SOCKET;
+           return passiveDataSocket;
+
        }
    }
+
+   void ClientThread::selectPassivePort(){
+       // Passive mode
+       SOCKET conn;
+       passiveDataSocket = INVALID_SOCKET;
+       for (int port = BEGIN_DATA_PORT; port < END_DATA_PORT; port++)
+       {
+           if ( SOCKET_ERROR == (conn=socket(AF_INET,SOCK_STREAM,0)))
+               {
+                 return;
+               }
+
+           sockaddr_in local_addr;
+           local_addr.sin_family=AF_INET;
+           local_addr.sin_port=htons(port);
+           local_addr.sin_addr.s_addr=0;
+           if (SOCKET_ERROR == bind(conn,(sockaddr *) &local_addr, sizeof(local_addr)))
+           {
+                return;
+           }
+
+           if (listen(conn, 1))
+           {
+                 // Ошибк
+                 return;
+           }
+           SOCKET client_socket;    // сокет для клиента
+           sockaddr_in client_addr;    // адрес клиента
+           int client_addr_size=sizeof(client_addr);
+           int res;
+
+           QString saddr = QString("Entering Passive Mode " + getAddrFormat("127.0.0.1",port));
+           sendString(FTPProtocol::getInstance()->getResponse(227, saddr), msocket);
+           client_socket=accept(conn, (sockaddr *)&client_addr, &client_addr_size);
+           closesocket(conn);
+           passiveDataSocket = client_socket;
+           return;
+       }
+
+
+   }
+
+

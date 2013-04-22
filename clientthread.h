@@ -7,6 +7,8 @@
 #include <ftpfilesystem.h>
 #include <QFile>
 #define BUF_LENGTH 1024
+#define BEGIN_DATA_PORT 6000
+#define END_DATA_PORT 6100
 class ClientThread : public QThread
 {
     Q_OBJECT
@@ -21,6 +23,7 @@ public slots:
     void closeconnection();
 private:
     SOCKET msocket;
+    SOCKET passiveDataSocket;
     bool terminated;
     bool mIsUserAuthenticated;
     bool isActiveMode;
@@ -36,10 +39,11 @@ private:
     void analizeCommand(QByteArray&);
     bool isAuthenticated();
     void setAuthenticated(bool);
-    void sendList(QString & anndr, int port);
+    void sendList();
     SOCKET openDataConnection();
     void recvFile(const QString &filename);
     void sendFile(const QString &filename);
+    void selectPassivePort();
     QByteArray toEncoding(const QString& s);
     QString fromEncoding(const QByteArray& s);
 };
