@@ -5,6 +5,7 @@
 #include <QStringBuilder>
 #include <QDateTime>
 #include <QFile>
+#include "myutils.h"
 class FtpFileSystem
 {
 public:
@@ -18,6 +19,7 @@ public:
     bool deleteFile(const QString &filename);
     bool mkDir(const QString &filename);
     bool getSize(const QString &filename, qint64 *size);
+    QString getLastModified(const QString &filename);
 private:
     QString curDir;
     QString baseDir;

@@ -160,7 +160,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("PWD")){
-            sendString(FTPProtocol::getInstance()->getResponse(257, "\""+ftpFileSystem->getWorkingDirectory()+"\""), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(257, toEncoding("\""+ftpFileSystem->getWorkingDirectory()+"\"")), msocket);
             return;
         }
         if (bytearray.contains("OPTS")){
@@ -224,7 +224,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         if (bytearray.contains("CWD")){
             QRegExp rx("^CWD\\s(.*)\r\n");
-            rx.indexIn(bytearray);
+            rx.indexIn(fromEncoding(bytearray));
             QString subFolder = rx.cap(1);
             if (ftpFileSystem->changeDir(subFolder))
                 sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
@@ -281,6 +281,21 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             if (ftpFileSystem->getSize(fileName, &size))
             {
                 sendString(FTPProtocol::getInstance()->getResponse(250, QString::number(size)), msocket);
+            }
+            else
+            {
+               sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            }
+            return;
+        }
+        if (bytearray.contains("MDTM")){
+            QRegExp rx("^MDTM\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString fileName = rx.cap(1);
+            QString sdate = ftpFileSystem->getLastModified(fileName);
+            if (sdate != NULL)
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(250, sdate), msocket);
             }
             else
             {

@@ -21,17 +21,24 @@ QString FtpFileSystem::formatDate(const QDateTime &dateTime)
 }
 
 QString FtpFileSystem::listDir(){
-    QDir dir(appendPath(baseDir, curDir));
+    QString fullPath = appendPath(baseDir, curDir);
+    QDir dir(fullPath);
+    if (!(dir.exists()))
+        return NULL;
+
     dir.setSorting(QDir::Size | QDir::Reversed);
     QString buffer;
     QFileInfoList list = dir.entryInfoList();
     for (int i = 0; i < list.size(); ++i) {
         QFileInfo fileInfo = list.at(i);
+        if (fileInfo.fileName()=="." || fileInfo.fileName() == "..")
+            continue;
          QString dirLabel = fileInfo.isDir()?"d":"-";
          QString sfileSize = fileInfo.isDir()?"512":QString::number(fileInfo.size());
          QDateTime dt = fileInfo.lastModified();
          QString lastModified = formatDate(dt);
-         buffer = buffer % QString("%1rw-r--r-- 1 root root %2 %3  %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName());
+         qDebug() << fileInfo.fileName();
+         buffer = buffer % QString("%1rw-r--r-- 1 root root %2 %3 %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName());
 
     }
     return buffer;
@@ -104,5 +111,18 @@ bool FtpFileSystem::getSize(const QString &filename,qint64 *size )
             return true;
         }
         return false;
+
+}
+
+QString FtpFileSystem::getLastModified(const QString &filename)
+{
+        QString fullFileName = getFile(filename);
+        QFile f(fullFileName);
+        if (f.exists())
+        {
+            QFileInfo fi(f);
+            return fi.lastModified().toString("yyyyMMddhhmmss");
+        }
+        return NULL;
 
 }
