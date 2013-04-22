@@ -75,7 +75,15 @@ void ClientThread::sendList()
     }
     QString s;
     s = ftpFileSystem->listDir();
-    send(conn,toEncoding(s).data(), s.size(),0);
+    int pos = 0;
+    int sendBytes;
+    QByteArray ba =toEncoding(s);
+    char* buf = ba.data();
+    qDebug()<< ba.size();
+    while((pos < ba.size()) && (sendBytes = send(conn,&buf[pos],BUF_LENGTH,0)) && (sendBytes != -1))
+    {
+        pos += sendBytes;
+    }
     shutdown(conn,SD_BOTH);
     closesocket(conn);
 }
@@ -134,7 +142,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
              setAuthenticated(true);
              if (ftpFileSystem != NULL)
                 delete ftpFileSystem;
-             ftpFileSystem = new FtpFileSystem("D:/Films");
+             ftpFileSystem = new FtpFileSystem("D:\Films");
         } else {
             // incorrect
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
@@ -431,7 +439,8 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
        {
            if ( SOCKET_ERROR == (conn=socket(AF_INET,SOCK_STREAM,0)))
                {
-                 return;
+
+                    continue;
                }
 
            sockaddr_in local_addr;
