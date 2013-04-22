@@ -37,7 +37,9 @@ private:
     bool isAuthenticated();
     void setAuthenticated(bool);
     void sendList(QString & anndr, int port);
-    void transferFile(const QString &filename);
+    SOCKET openDataConnection();
+    void recvFile(const QString &filename);
+    void sendFile(const QString &filename);
     QByteArray toEncoding(const QString& s);
     QString fromEncoding(const QByteArray& s);
 };

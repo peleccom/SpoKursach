@@ -15,6 +15,8 @@ public:
     bool changeDir(const QString & subfolder);
     QString getWorkingDirectory();
     QString getFile(const QString &filename);
+    bool deleteFile(const QString &filename);
+    bool mkDir(const QString &filename);
 private:
     QString curDir;
     QString baseDir;

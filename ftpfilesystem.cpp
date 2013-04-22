@@ -73,3 +73,24 @@ QString FtpFileSystem::getFile(const QString& filename)
 {
     return  appendPath(baseDir,appendPath(curDir,filename));
 }
+
+bool FtpFileSystem::deleteFile(const QString &filename){
+    QString fullFileName = getFile(filename);
+    QFile f(fullFileName);
+    QDir d(fullFileName);
+    if (d.exists())
+    {
+        return d.rmdir(fullFileName);
+    }
+    if (f.exists())
+    {
+        return f.remove();
+    }
+    return false;
+}
+
+bool FtpFileSystem::mkDir(const QString &filename){
+     QString fullDirPath = getFile(filename);
+     QDir dir;
+     return dir.mkdir(fullDirPath);
+}

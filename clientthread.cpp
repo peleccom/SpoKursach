@@ -64,38 +64,12 @@ int ClientThread::sendString(QString mes, SOCKET sock){
 
 void ClientThread::sendList(QString &servername, int port)
 {
-    WSADATA wsaData;
-    struct hostent *hp;
-    unsigned int addr;
-    struct sockaddr_in server;
-    SOCKET conn;
-    conn=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-    if(conn==INVALID_SOCKET)
-            return;
-            if(inet_addr(servername.toAscii().data())==INADDR_NONE)
+    SOCKET conn = openDataConnection();
+    if (conn == INVALID_SOCKET)
     {
-            hp=gethostbyname(servername.toAscii().data());
+        sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+        return;
     }
-    else
-    {
-            addr=inet_addr(servername.toAscii().data());
-            hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
-    }
-    if(hp==NULL)
-    {
-            closesocket(conn);
-            return;
-    }
-    server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
-    server.sin_family=AF_INET;
-    server.sin_port=htons(port);
-    if(::connect(conn,(struct sockaddr*)&server,sizeof(server)))
-    {
-            closesocket(conn);
-            return;
-    }
-    char buff[512];
-    int z;
     QString s;
     s = ftpFileSystem->listDir();
     send(conn,toEncoding(s).data(), s.size(),0);
@@ -238,15 +212,6 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             terminate();
             return;
         }
-        if (bytearray.contains("DELE")){
-            // TODO
-            QRegExp rx("^DELE\\s(.*)\r\n");
-            rx.indexIn(bytearray);
-            QString filename = rx.cap(1);
-            qDebug() << "request to delete "<< filename;
-            sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
-            return;
-        }
         if (bytearray.contains("CDUP")){
             if (ftpFileSystem->cdUp())
                 sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
@@ -269,43 +234,49 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-            transferFile(ftpFileSystem->getFile(filename));
-            sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+            sendFile(ftpFileSystem->getFile(filename));
             return;
         }
+        if (bytearray.contains("STOR")){
+            QRegExp rx("^STOR\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString filename = rx.cap(1);
+            sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+            recvFile(ftpFileSystem->getFile(filename));
+            return;
+        }
+        if (bytearray.contains("DELE")){
+            QRegExp rx("^DELE\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString filename = rx.cap(1);
+            if (ftpFileSystem->deleteFile(filename))
+                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            return;
+        }
+        if (bytearray.contains("MKD")){
+            QRegExp rx("^MKD\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString dirName = rx.cap(1);
+            if (ftpFileSystem->mkDir(dirName))
+                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            return;
+        }
+
     }
    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
 }
 
-    void ClientThread::transferFile(const QString &filename){
-        struct hostent *hp;
-        unsigned int addr;
-        struct sockaddr_in server;
-        SOCKET conn;
-        conn=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
-        if(conn==INVALID_SOCKET)
-                return;
-                if(inet_addr(active_addr.toAscii().data())==INADDR_NONE)
+    void ClientThread::sendFile(const QString &filename){
+
+        SOCKET conn = openDataConnection();
+        if (conn == INVALID_SOCKET)
         {
-                hp=gethostbyname(active_addr.toAscii().data());
-        }
-        else
-        {
-                addr=inet_addr(active_addr.toAscii().data());
-                hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
-        }
-        if(hp==NULL)
-        {
-                closesocket(conn);
-                return;
-        }
-        server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
-        server.sin_family=AF_INET;
-        server.sin_port=htons(active_port);
-        if(::connect(conn,(struct sockaddr*)&server,sizeof(server)))
-        {
-                closesocket(conn);
-                return;
+            sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+            return;
         }
         char buff[1024];
         int bytesReaded;
@@ -318,6 +289,29 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         f.close();
         shutdown(conn,SD_BOTH);
         closesocket(conn);
+        sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+    }
+
+    void ClientThread::recvFile(const QString &filename){
+
+        SOCKET conn = openDataConnection();
+        if (conn == INVALID_SOCKET)
+        {
+            sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+            return;
+        }
+        char buff[1024];
+        int bytesReaded;
+        QFile f(filename);
+        f.open(QIODevice::WriteOnly);
+        while( (bytesReaded = recv(conn, buff, 1024,0)) && (bytesReaded != -1))
+        {
+             f.write(buff, bytesReaded);
+        }
+        f.close();
+        shutdown(conn,SD_BOTH);
+        closesocket(conn);
+        sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
     }
 
    ClientThread::~ClientThread()
@@ -338,4 +332,45 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
        if(isUTF8)
            return QString::fromUtf8(s.data());
                    return QString::fromAscii(s.data());
+   }
+
+   // open new data connection
+   SOCKET ClientThread::openDataConnection(){
+       if (isActiveMode)
+       {
+           struct hostent *hp;
+           unsigned int addr;
+           struct sockaddr_in server;
+           SOCKET conn;
+           conn=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+           if(conn==INVALID_SOCKET)
+                   return INVALID_SOCKET;
+                   if(inet_addr(active_addr.toAscii().data())==INADDR_NONE)
+           {
+                   hp=gethostbyname(active_addr.toAscii().data());
+           }
+           else
+           {
+                   addr=inet_addr(active_addr.toAscii().data());
+                   hp=gethostbyaddr((char*)&addr,sizeof(addr),AF_INET);
+           }
+           if(hp==NULL)
+           {
+                   closesocket(conn);
+                   return INVALID_SOCKET;
+           }
+           server.sin_addr.s_addr=*((unsigned long*)hp->h_addr);
+           server.sin_family=AF_INET;
+           server.sin_port=htons(active_port);
+           if(::connect(conn,(struct sockaddr*)&server,sizeof(server)))
+           {
+                   closesocket(conn);
+                   return INVALID_SOCKET;
+           }
+           return conn;
+       }
+       else
+       {
+           return INVALID_SOCKET;
+       }
    }
