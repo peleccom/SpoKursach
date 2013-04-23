@@ -65,16 +65,29 @@ QString FtpFileSystem::getWorkingDirectory(){
 }
 
 bool FtpFileSystem::changeDir(const QString &subfolder){
+    QString newDir;
     if (subfolder.startsWith("/"))
     {
-        curDir = QDir::cleanPath(subfolder);
-        return true;
+        newDir = QDir::cleanPath(subfolder);
+        if (QDir(appendPath(baseDir,newDir)).exists())
+        {
+            curDir = newDir;
+            return true;
+        }
+        else
+            return false;
     }
     else
     {
-        curDir = appendPath(curDir, subfolder);
-        curDir.replace("//","/");
-        return true;
+        newDir = appendPath(curDir, subfolder);
+        newDir.replace("//","/");
+        if (QDir(appendPath(baseDir,newDir)).exists())
+        {
+            curDir = newDir;
+            return true;
+        }
+        else
+            return false;
     }
 }
 
