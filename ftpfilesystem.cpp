@@ -34,11 +34,14 @@ QString FtpFileSystem::listDir(){
         if (fileInfo.fileName()=="." || fileInfo.fileName() == "..")
             continue;
          QString dirLabel = fileInfo.isDir()?"d":"-";
+         bool writable = fileInfo.isWritable();
+         bool readable = fileInfo.isReadable();
          QString sfileSize = fileInfo.isDir()?"512":QString::number(fileInfo.size());
          QDateTime dt = fileInfo.lastModified();
          QString lastModified = formatDate(dt);
          qDebug() << fileInfo.fileName();
-         buffer = buffer % QString("%1rw-r--r-- 1 root root %2 %3 %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName());
+         buffer = buffer % QString("%1%5%6-r--r-- 1 root root %2 %3 %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName())
+                 .arg(writable?"w":"-").arg(readable?"r":"-");
 
     }
     return buffer;

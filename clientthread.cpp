@@ -78,12 +78,21 @@ void ClientThread::sendList()
     int pos = 0;
     int sendBytes;
     QByteArray ba = toEncoding(s);
-    char* buf = ba.data();
+    const char* buf = ba.constData();
     qDebug()<< ba.size();
-    while((pos < ba.size()) && (sendBytes = send(conn,&buf[pos],BUF_LENGTH,0)) && (sendBytes != -1))
+    int size = ba.size();
+    int bytesToSend;
+    do
     {
-        pos += sendBytes;
+       bytesToSend = (size-pos);
+       bytesToSend  = (bytesToSend> BUF_LENGTH) ? BUF_LENGTH: bytesToSend;
+       sendBytes = send(conn,&buf[pos],bytesToSend,0);
+       if (sendBytes == 0 || sendBytes == -1)
+           break;
+       pos += sendBytes;
     }
+    while(pos < size);
+
     shutdown(conn,SD_BOTH);
     closesocket(conn);
 }
@@ -124,6 +133,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             // no user
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
         }
+
         return;
     }
 
