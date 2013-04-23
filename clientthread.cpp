@@ -131,6 +131,10 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             }
         } else {
             // no user
+             if (user == "anonymous")
+             {
+                sendString(FTPProtocol::getInstance()->getResponse(331), msocket);
+             }
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
         }
 
