@@ -65,10 +65,13 @@ QString FtpFileSystem::getWorkingDirectory(){
 
 bool FtpFileSystem::changeDir(const QString &subfolder){
     QString newDir;
+    QString newFullPathDir;
     if (subfolder.startsWith("/"))
     {
         newDir = QDir::cleanPath(subfolder);
-        if (QDir(appendPath(baseDir,newDir)).exists())
+        newDir.replace("/..","/");
+        newFullPathDir = appendPath(baseDir,newDir);
+        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= baseDir.size()))
         {
             curDir = newDir;
             return true;
@@ -80,7 +83,9 @@ bool FtpFileSystem::changeDir(const QString &subfolder){
     {
         newDir = appendPath(curDir, subfolder);
         newDir.replace("//","/");
-        if (QDir(appendPath(baseDir,newDir)).exists())
+        newDir.replace("/..","/");
+        newFullPathDir = appendPath(baseDir,newDir);
+        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= baseDir.size()))
         {
             curDir = newDir;
             return true;
