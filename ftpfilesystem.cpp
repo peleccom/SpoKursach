@@ -41,8 +41,7 @@ QString FtpFileSystem::listDir(){
          QString lastModified = formatDate(dt);
          qDebug() << fileInfo.fileName();
          buffer = buffer % QString("%1%5%6-r--r-- 1 root root %2 %3 %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName())
-                 .arg(writable?"w":"-").arg(readable?"r":"-");
-
+                .arg(readable?"r":"-").arg(writable?"w":"-");
     }
     return buffer;
 }
