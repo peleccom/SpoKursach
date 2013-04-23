@@ -77,7 +77,7 @@ void ClientThread::sendList()
     s = ftpFileSystem->listDir();
     int pos = 0;
     int sendBytes;
-    QByteArray ba =toEncoding(s);
+    QByteArray ba = toEncoding(s);
     char* buf = ba.data();
     qDebug()<< ba.size();
     while((pos < ba.size()) && (sendBytes = send(conn,&buf[pos],BUF_LENGTH,0)) && (sendBytes != -1))
@@ -142,7 +142,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
              setAuthenticated(true);
              if (ftpFileSystem != NULL)
                 delete ftpFileSystem;
-             ftpFileSystem = new FtpFileSystem("D:\Films");
+             ftpFileSystem = new FtpFileSystem("D:\\Films");
         } else {
             // incorrect
              sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
@@ -192,8 +192,17 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QRegExp rx("^TYPE (\\w)( (\\w))?");
             rx.indexIn(bytearray);
             qDebug() << "type" << rx.cap(1) << rx.cap(3);
-            type = rx.cap(1);
+            mtype = rx.cap(1);
             sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
+            return;
+            if (mtype == "I")
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
+            }
+            else
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+            }
             return;
         }
         if (bytearray.contains("PORT")){
@@ -327,7 +336,11 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         char buff[1024];
         int bytesReaded;
         QFile f(filename);
-        f.open(QIODevice::ReadOnly);
+        if (!f.open(QIODevice::ReadOnly))
+        {
+            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), msocket);
+            return;
+        }
         while( (bytesReaded = f.read(buff,1024)) && (bytesReaded != -1))
         {
             send(conn,buff,bytesReaded,0);
@@ -358,7 +371,11 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         char buff[1024];
         int bytesReaded;
         QFile f(filename);
-        f.open(QIODevice::WriteOnly);
+        if (!f.open(QIODevice::WriteOnly))
+        {
+            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), msocket);
+            return;
+        }
         while( (bytesReaded = recv(conn, buff, 1024,0)) && (bytesReaded != -1))
         {
              f.write(buff, bytesReaded);

@@ -28,7 +28,7 @@ private:
     bool mIsUserAuthenticated;
     bool isActiveMode;
     bool isUTF8;
-    QString type;
+    QString mtype;
     QString workingDirectory;
     QCryptographicHash *hash;
     QString active_addr;
