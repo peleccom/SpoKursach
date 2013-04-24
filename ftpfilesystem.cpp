@@ -34,8 +34,8 @@ QString FtpFileSystem::listDir(){
         if (fileInfo.fileName()=="." || fileInfo.fileName() == "..")
             continue;
          QString dirLabel = fileInfo.isDir()?"d":"-";
-         bool writable = fileInfo.isWritable();
-         bool readable = fileInfo.isReadable();
+         bool writable = isWritable(fileInfo.fileName());
+         bool readable =  isReadable(fileInfo.fileName());
          QString sfileSize = fileInfo.isDir()?"512":QString::number(fileInfo.size());
          QDateTime dt = fileInfo.lastModified();
          QString lastModified = formatDate(dt);
@@ -145,4 +145,15 @@ QString FtpFileSystem::getLastModified(const QString &filename)
         }
         return NULL;
 
+}
+
+
+bool FtpFileSystem::isReadable(const QString &fileName){
+    QFileInfo fi(getFile(fileName));
+    return fi.isReadable();
+}
+
+bool FtpFileSystem::isWritable(const QString &fileName){
+    QFileInfo fi(getFile(fileName));
+    return fi.isWritable();
 }

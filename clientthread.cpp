@@ -9,7 +9,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     hash = new QCryptographicHash(QCryptographicHash::Md5);
     workingDirectory = "/";
     ftpFileSystem = NULL;
-    isUTF8 = false;
+    isUTF8 =  true;
     passiveDataSocket = INVALID_SOCKET;
 }
 
@@ -61,7 +61,9 @@ int ClientThread::sendString(QString mes, SOCKET sock){
     if (!mes.endsWith("\r\n"))
         mes += "\r\n";
     qDebug() << ">>" << mes.trimmed();
-    return send(sock,mes.toAscii().data(),mes.length(),0);
+    QByteArray ba = mes.toAscii();
+    const char *data = ba.constData();
+    return send(sock,data,mes.length(),0);
 }
 
 void ClientThread::sendList()
@@ -172,8 +174,8 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("FEAT")){
-            QString syst("Features: \r\n PASV");
-            sendString(FTPProtocol::getInstance()->getResponse(211, syst), msocket);
+            QString syst("211-Features:\n\rMDTM\n\rREST STREAM\n\rSIZE\n\rMLST type*;size*;modify*;\n\rMLSD\n\rUTF8\n\rCLNT\n\rMFMT\n\r211 End");
+            sendString(syst, msocket);
             return;
         }
         if (bytearray.contains("HELP")){

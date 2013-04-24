@@ -24,6 +24,8 @@ private:
     QString curDir;
     QString baseDir;
     QString formatDate(const QDateTime &dateTime);
+    bool isWritable(const QString & fileName);
+    bool isReadable(const QString & fileName);
 };
 
 #endif // FTPFILESYSTEM_H
