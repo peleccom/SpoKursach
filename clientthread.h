@@ -19,6 +19,7 @@ public:
 
 signals:
     void onerror(const QString &);
+    void onlog(const QString &);
 public slots:
     void closeconnection();
 private:
@@ -46,6 +47,7 @@ private:
     void selectPassivePort();
     QByteArray toEncoding(const QString& s);
     QString fromEncoding(const QByteArray& s);
+    QString getLocalIp();
 };
 
 #endif // CLIENTTHREAD_H

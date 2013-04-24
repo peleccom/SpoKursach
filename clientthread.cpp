@@ -366,16 +366,16 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         closesocket(conn);
         sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
     }
+
     QString getAddrFormat(QString ip, int port){
         int lowpartport = port % 256;
         int highpartport = port / 256;
-        QRegExp rx("(\\d+).(\\d+).(\\d+).(\\d+).(\\d+).(\\d+)");
+        QRegExp rx("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)");
         rx.indexIn(ip);
-       // return QString("(%1,%2,%3,%4,%5,%6").arg(rx.cap(1)).arg(rx.cap(2)).arg(rx.cap(3)).arg(rx.cap(4)).
-       //         arg(highpartport).arg(lowpartport);
-        return QString("(127,0,0,1,%5,%6)").arg(highpartport).arg(lowpartport);
-
+       return QString("(%1,%2,%3,%4,%5,%6)").arg(rx.cap(1)).arg(rx.cap(2)).arg(rx.cap(3)).arg(rx.cap(4)).
+                arg(highpartport).arg(lowpartport);
     }
+
     void ClientThread::recvFile(const QString &filename){
 
         SOCKET conn = openDataConnection();
@@ -463,6 +463,25 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
 
        }
    }
+   QString ClientThread::getLocalIp()
+   {
+       HOSTENT *hp=NULL;
+       struct sockaddr_in source;
+       char hostname[128];
+
+       gethostname(hostname, 128);
+       hp = gethostbyname(hostname);
+
+       if(hp == NULL)
+       {
+       return NULL;
+       }
+
+       memcpy(&(source.sin_addr),hp->h_addr,hp->h_length);
+       source.sin_family = hp->h_addrtype;
+
+       return inet_ntoa(source.sin_addr);
+   }
 
    void ClientThread::selectPassivePort(){
        // Passive mode
@@ -495,14 +514,13 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
            int client_addr_size=sizeof(client_addr);
            int res;
 
-           QString saddr = QString("Entering Passive Mode " + getAddrFormat("127.0.0.1",port));
+           QString saddr = QString("Entering Passive Mode " + getAddrFormat(getLocalIp(),port));
            sendString(FTPProtocol::getInstance()->getResponse(227, saddr), msocket);
            client_socket=accept(conn, (sockaddr *)&client_addr, &client_addr_size);
            closesocket(conn);
            passiveDataSocket = client_socket;
            return;
        }
-
 
    }
 
