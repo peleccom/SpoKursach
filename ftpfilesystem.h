@@ -20,6 +20,8 @@ public:
     bool mkDir(const QString &filename);
     bool getSize(const QString &filename, qint64 *size);
     QString getLastModified(const QString &filename);
+    bool rename(const QString &oldName, const QString &newName);
+    bool exist(const QString &fileName);
 private:
     QString curDir;
     QString baseDir;

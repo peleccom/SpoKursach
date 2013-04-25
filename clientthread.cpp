@@ -11,6 +11,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     ftpFileSystem = NULL;
     isUTF8 =  true;
     passiveDataSocket = INVALID_SOCKET;
+    renameBeginned = false;
 }
 
 
@@ -168,6 +169,22 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
     }
     if (isAuthenticated())
     {
+        // RNFR -> RNTO sequence
+        if (renameBeginned){
+            if (bytearray.contains("RNTO")){
+                QRegExp rx("^RNTO\\s(.*)\r\n");
+                rx.indexIn(fromEncoding(bytearray));
+                QString newName = rx.cap(1);
+                renameBeginned = false;
+                if (ftpFileSystem->rename(renameOldName, newName))
+                    sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                else
+                    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                return;
+            }
+            sendString(FTPProtocol::getInstance()->getResponse(503), msocket);
+            return;
+        }
         if (bytearray.contains("SYST")){
             QString syst("Windows Type : L8");
             sendString(FTPProtocol::getInstance()->getResponse(215, syst), msocket);
@@ -334,6 +351,20 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             {
                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
             }
+            return;
+        }
+        if (bytearray.contains("RNFR")){
+            QRegExp rx("^RNFR\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            renameOldName = rx.cap(1);
+
+            if (ftpFileSystem->exist(renameOldName))
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(350), msocket);
+                renameBeginned = true;
+            }
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
             return;
         }
 

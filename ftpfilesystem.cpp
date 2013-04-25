@@ -157,3 +157,14 @@ bool FtpFileSystem::isWritable(const QString &fileName){
     QFileInfo fi(getFile(fileName));
     return fi.isWritable();
 }
+
+bool FtpFileSystem::rename(const QString &oldName, const QString &newName){
+    QString oldFullPath = getFile(oldName);
+    QString newFullPath = getFile(newName);
+    return QFile::rename(oldFullPath, newFullPath);
+}
+
+bool FtpFileSystem::exist(const QString &fileName){
+    QFile f(getFile(fileName));
+    return f.exists();
+}

@@ -29,6 +29,8 @@ private:
     bool mIsUserAuthenticated;
     bool isActiveMode;
     bool isUTF8;
+    bool renameBeginned;
+    QString renameOldName;
     QString mtype;
     QString workingDirectory;
     QCryptographicHash *hash;
