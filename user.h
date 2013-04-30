@@ -1,27 +1,27 @@
 #ifndef USER_H
 #define USER_H
+#include <QString>
+#include <QCryptographicHash>
 
-#include <QObject>
+#define CRYPT_SOUL "6LyOb"
 
-class User : public QObject
+class User
 {
-    Q_OBJECT
 public:
-    explicit User(QObject *parent = 0);
-signals:
-
-public slots:
-
+    // return user or null if no such user
+    // вернет обьект пользователя если он существует
+    static User getUser(const QString &username);
+    User(const User &other);
+    QString getName();
+    bool auth(const QString &pass);
+    bool isAuth();
 private:
-    QString m_strName;
-    QString m_strPassword;
-    bool m_bAccountDisabled;
+    User();
+    QString getHash(const QString &plainText);
+    QString mUserName;
+    QString mPassswordHash;
+    bool mIsAuth;
 
-    bool m_bAllowDownload;
-    bool m_bAllowUpload;
-    bool m_bAllowRename;
-    bool m_bAllowDelete;
-    bool m_bAllowCreateDirectory;
 };
 
 #endif // USER_H

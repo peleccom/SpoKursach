@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     edituserdialog.cpp \
     clientrecvexception.cpp \
     ftpfilesystem.cpp \
-    filetransferthread.cpp
+    filetransferthread.cpp \
+    user.cpp
 
 HEADERS  += mainwindow.h \
     ftpserver.h \
@@ -35,13 +36,16 @@ HEADERS  += mainwindow.h \
     edituserdialog.h \
     clientrecvexception.h \
     ftpfilesystem.h \
-    filetransferthread.h
+    filetransferthread.h \
+    user.h
 
 FORMS    += mainwindow.ui \
     edituserdialog.ui
 
 RESOURCES += \
     res.qrc
+
+
 
 
 
