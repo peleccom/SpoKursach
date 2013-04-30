@@ -6,6 +6,7 @@
 #include <QCryptographicHash>
 #include <ftpfilesystem.h>
 #include <QFile>
+#include <user.h>
 #define BUF_LENGTH 1024
 #define BEGIN_DATA_PORT 2090
 #define END_DATA_PORT 3000
@@ -35,6 +36,7 @@ private:
     QString workingDirectory;
     QCryptographicHash *hash;
     QString active_addr;
+    User mUser;
     FtpFileSystem *ftpFileSystem;
     int active_port;
     int sendString(QString mes, SOCKET sock);

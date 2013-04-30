@@ -117,54 +117,41 @@ QString ClientThread::recvString(){
 }
 
 void ClientThread::analizeCommand(QByteArray &bytearray){
-    QString user;
+    QString userName;
     if (bytearray.contains("USER")) {
         QRegExp rx("^USER\\s(.*)\r\n");
         rx.indexIn(bytearray);
-        user = rx.cap(1);
-        int id = Users::instance()->id(user);
-        QString pass = Users::instance()->load(tr("%1/%2").arg(id).arg(user), "empty").toString();
-        if (Users::instance()->isUser(user)) {
-            if (pass == "empty") {
-                //password required
-                sendString(FTPProtocol::getInstance()->getResponse(331), msocket);
-            } else {
-                // welcome
-                 sendString(FTPProtocol::getInstance()->getResponse(230), msocket);
-            }
-        } else {
-            // no user
-             if (user == "anonymous")
-             {
-                sendString(FTPProtocol::getInstance()->getResponse(331), msocket);
-             }
-             sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
-        }
-
+        userName = rx.cap(1);
+        mUser = User::getUser(userName);
+        sendString(FTPProtocol::getInstance()->getResponse(331), msocket);
         return;
     }
 
     if (bytearray.contains("PASS")) {
         QRegExp rx("^PASS\\s(.*)\r\n");
         rx.indexIn(bytearray);
-        int id = Users::instance()->id(user);
-        QString pass = Users::instance()->load(tr("%1/pass").arg(id), "empty").toString();
-        QByteArray arr;
-        arr.append(rx.cap(1));
-        hash->addData(arr);
-        qDebug() << hash->result() + "\n" << pass;
-        if (pass == QString(hash->result())) {
-            // logged in
-             sendString(FTPProtocol::getInstance()->getResponse(230), msocket);
-             setAuthenticated(true);
-             if (ftpFileSystem != NULL)
-                delete ftpFileSystem;
-             ftpFileSystem = new FtpFileSystem("D:\\Films");
-        } else {
-            // incorrect
-             sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
+        QString pass = rx.cap(1);
+        if (mUser.isBadObject())
+        {
+            sendString(FTPProtocol::getInstance()->getResponse(503,"PASS send before USER"), msocket);
         }
-        hash->reset();
+        else
+        {
+            if (mUser.auth(pass))
+            {
+                // logged in
+                 sendString(FTPProtocol::getInstance()->getResponse(230), msocket);
+                 setAuthenticated(true);
+                 if (ftpFileSystem != NULL)
+                    delete ftpFileSystem;
+                 ftpFileSystem = new FtpFileSystem("D:\\Films");
+            }
+            else
+            {
+                // incorrect
+                 sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
+            }
+        }
         return;
     }
     if (isAuthenticated())
