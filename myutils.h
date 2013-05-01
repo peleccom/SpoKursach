@@ -14,6 +14,13 @@ typedef enum {
     PASSIVE
 } MODE;
 
+typedef struct{
+    bool aread;
+    bool awrite;
+    bool adelete;
+    bool aappend;
+} FileAccess;
+
 
 class MyUtils
 {

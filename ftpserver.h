@@ -6,6 +6,7 @@
 #include  <ftpcore.h>
 #include <myutils.h>
 #include <QThread>
+#include <settings.h>
 
 
 

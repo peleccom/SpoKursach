@@ -131,7 +131,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         QRegExp rx("^PASS\\s(.*)\r\n");
         rx.indexIn(bytearray);
         QString pass = rx.cap(1);
-        if (mUser.isBadObject())
+        if (mUser.isNull())
         {
             sendString(FTPProtocol::getInstance()->getResponse(503,"PASS send before USER"), msocket);
         }
@@ -354,9 +354,10 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                 sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
             return;
         }
-
+    sendString(FTPProtocol::getInstance()->getResponse(500), msocket);
     }
-   sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+    else
+        sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
 }
 
     void ClientThread::sendFile(const QString &filename){

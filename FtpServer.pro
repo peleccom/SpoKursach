@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network xml
 
 TARGET = FtpServer
 TEMPLATE = app
@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     clientrecvexception.cpp \
     ftpfilesystem.cpp \
     filetransferthread.cpp \
-    user.cpp
+    user.cpp \
+    settings.cpp
 
 HEADERS  += mainwindow.h \
     ftpserver.h \
@@ -37,13 +38,20 @@ HEADERS  += mainwindow.h \
     clientrecvexception.h \
     ftpfilesystem.h \
     filetransferthread.h \
-    user.h
+    user.h \
+    settings.h
 
 FORMS    += mainwindow.ui \
     edituserdialog.ui
 
 RESOURCES += \
     res.qrc
+
+
+
+
+
+
 
 
 
