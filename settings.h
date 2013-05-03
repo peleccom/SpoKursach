@@ -5,6 +5,7 @@
 #include <QDomDocument>
 #include <myutils.h>
 #define CONFIG_FILE "settings.xml"
+class User;
 class Settings
 {
 public:
@@ -14,6 +15,7 @@ public:
     bool save();
     bool load();
     bool addUser(User &user);
+    User getUser(const QString &userName);
 private:
     static Settings * mInstance;
     QList<User> users;

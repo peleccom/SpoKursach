@@ -6,6 +6,7 @@
 #include <QDomDocument>
 #include <QDebug>
 #include <myutils.h>
+#include <settings.h>
 #define CRYPT_SOUL "6LyOb"
 
 class User
@@ -29,6 +30,7 @@ public:
     QString getPasswordHash();
     FileAccess getFileAccess();
 private:
+    friend class Settings;
     User(const QString &userName);
     QString getHash(const QString &plainText);
     QString mUserName;

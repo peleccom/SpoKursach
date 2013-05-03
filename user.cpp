@@ -12,6 +12,14 @@ User::User(const QString &userName, const QString &passHash, const QString &fold
     mPassswordHash = passHash;
     mFolder = folder;
     mFileAccess = fileAccess;
+    if (userName == "anonymous" && passHash.size() == 0 )
+    {
+        mIsAnonymousAccessed = true;
+    }
+    else
+    {
+        mIsAnonymousAccessed = false;
+    }
 }
 
 User::User(const QString &userName){
@@ -38,9 +46,7 @@ User::User(const User &other){
 }
 
 User User::getUser(const QString &username){
-    User u(username);
-
-    return u;
+    return Settings::getInstance()->getUser(username);
 }
 
 void traverseNode(const QDomNode &node){

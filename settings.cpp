@@ -133,3 +133,16 @@ bool Settings::addUser(User& user){
     users.append(user);
     return save();
 }
+
+User Settings::getUser(const QString &userName){
+    User user;
+    foreach(user,users){
+        if (user.getName() == userName){
+            user.mIsBad = false;
+            user.mIsAuth = false;
+            return user;
+        }
+
+    }
+    return User();
+}
