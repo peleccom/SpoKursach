@@ -5,11 +5,11 @@ User::User()
     mIsBad = true;
 }
 
-User::User(const QString &userName, const QString &pass, const QString &folder, FileAccess fileAccess)
+User::User(const QString &userName, const QString &passHash, const QString &folder, FileAccess fileAccess)
 {
     mIsBad= true;
     mUserName = userName;
-    mPassswordHash = getHash(pass);
+    mPassswordHash = passHash;
     mFolder = folder;
     mFileAccess = fileAccess;
 }

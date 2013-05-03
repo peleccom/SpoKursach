@@ -4,6 +4,7 @@
 #include <user.h>
 #include <QDomDocument>
 #include <myutils.h>
+#define CONFIG_FILE "settings.xml"
 class Settings
 {
 public:

@@ -44,6 +44,7 @@ void FtpServer::stop(){
 void FtpServer::started(){
    emit onStarted("Сервер запущен");
    mSTATUS = STARTED;
+   Settings::getInstance();
    clients_count = 0;Settings set; set.save();
 }
 

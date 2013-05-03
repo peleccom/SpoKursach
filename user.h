@@ -12,7 +12,7 @@ class User
 {
 public:
     User();
-    User(const QString &userName, const QString &pass, const QString &folder, FileAccess fileAccess);
+    User(const QString &userName, const QString &passHash, const QString &folder, FileAccess fileAccess);
     // return user or null if no such user
     // вернет обьект пользователя если он существует
     static User getUser(const QString &username);
