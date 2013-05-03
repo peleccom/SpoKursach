@@ -146,3 +146,25 @@ User Settings::getUser(const QString &userName){
     }
     return User();
 }
+
+
+QList<User> Settings::listUsers(){
+    return users;
+}
+
+bool Settings::getForceUtf8(){
+    return utf8;
+}
+
+void Settings::setForceUtf8(bool value){
+    utf8 = value;
+}
+
+bool Settings::removeUser(int index){
+    if (index > 0 && index < users.size())
+    {
+        users.removeAt(index);
+        return true;
+    }
+    return false;
+}

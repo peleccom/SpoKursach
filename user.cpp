@@ -31,7 +31,7 @@ User::User(const QString &userName){
     mIsAnonymousAccessed = true;
 }
 
-QString User::getName(){
+QString User::getName() const{
     return mUserName;
 }
 

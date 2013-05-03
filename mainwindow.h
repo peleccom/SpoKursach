@@ -5,6 +5,8 @@
 #include <ftpserver.h>
 #include <edituserdialog.h>
 #include <log.h>
+#include <settings.h>
+#include <myutils.h>
 namespace Ui {
     class MainWindow;
 }
@@ -21,6 +23,7 @@ public:
 private:
     FtpServer *ftpServer;
     Log* log;
+    void updateUserTable();
 
 public slots:
     void eventHandler(QString str);
@@ -29,6 +32,8 @@ public slots:
      void on_stop_clicked();
      void addlog(QString s);
      void edituser();
+     void adduser();
+     void deleteuser();
 protected:
      void closeEvent(QCloseEvent *event);
 };

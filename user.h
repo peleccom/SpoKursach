@@ -17,11 +17,12 @@ public:
     // return user or null if no such user
     // вернет обьект пользователя если он существует
     static User getUser(const QString &username);
+    static QString getHash(const QString &plainText);
     static void listUsers();
     static void deleteUser(const QString &userName);
     static void saveUser(const QString& userName, const QString &pass, const QString &folder);
     User(const User &other);
-    QString getName();
+    QString getName() const;
     bool auth(const QString &pass);
     bool isNull();
     bool isAuth();
@@ -32,7 +33,6 @@ public:
 private:
     friend class Settings;
     User(const QString &userName);
-    QString getHash(const QString &plainText);
     QString mUserName;
     QString mPassswordHash;
     QString mFolder;

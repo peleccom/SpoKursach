@@ -17,7 +17,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ftpServer, SIGNAL(onEvent(QString)), this, SLOT(eventHandler(QString)));
 
 
-    connect(ui->addUserButton, SIGNAL(clicked()),SLOT(edituser()));
+    connect(ui->addUserButton, SIGNAL(clicked()),SLOT(adduser()));
+    connect(ui->editUserButton,SIGNAL(clicked()),SLOT(edituser()));
+    connect(ui->deleteUserButton,SIGNAL(clicked()),SLOT(deleteuser()));
+
+    ui->usersTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    updateUserTable();
 }
 
 MainWindow::~MainWindow()
@@ -54,11 +59,68 @@ void MainWindow::closeEvent(QCloseEvent *event){
     Users::destroy();
 }
 
+
 void MainWindow::edituser(){
-    QString user = "Alex";
-    QString pass = "Pass";
-    QString group = "group";
-    EditUserDialog *editdialog = new EditUserDialog(user, pass, group);
-    editdialog->exec();
+    QModelIndexList indexList = ui->usersTable->selectionModel()->selectedIndexes();
+    int row;
+    foreach (QModelIndex index, indexList) {
+        row = index.row();
+        break;
+    }
+    EditUserDialog editdialog(row);
+    int result = editdialog.exec();
+    if (result == QDialog::Accepted)
+    {
+        User user = editdialog.creatUserObject();
+        Settings::getInstance()->addUser(user);
+        updateUserTable();
+    }
+}
+
+
+void MainWindow::adduser(){
+    EditUserDialog editdialog;
+    int result = editdialog.exec();
+    if (result == QDialog::Accepted)
+    {
+        User user = editdialog.creatUserObject();
+        Settings::getInstance()->addUser(user);
+        updateUserTable();
+    }
+}
+
+void MainWindow::deleteuser(){
+    QModelIndexList indexList = ui->usersTable->selectionModel()->selectedIndexes();
+    int row;
+    foreach (QModelIndex index, indexList) {
+        row = index.row();
+        break;
+    }
+    Settings::getInstance()->removeUser(row);
+    updateUserTable();
+}
+
+void MainWindow::updateUserTable(){
+    User user;
+    QList<User> users = Settings::getInstance()->listUsers();
+    ui->usersTable->clearContents();
+    ui->usersTable->setRowCount(users.count());
+    QTableWidgetItem *item;
+    for (int i=0;i < users.size(); i++ ){
+        user = users.at(i);
+        item = new QTableWidgetItem(user.getName());
+        ui->usersTable->setItem(i,0,item);
+        item = new QTableWidgetItem((user.getPasswordHash().size() != 0)?"*":"");
+        ui->usersTable->setItem(i,1,item);
+        item = new QTableWidgetItem(user.getFolder());
+        ui->usersTable->setItem(i,2,item);
+        FileAccess fileAccess = user.getFileAccess();
+        item = new QTableWidgetItem(QString("%1%2%3%4")
+                                    .arg(fileAccess.aread?"r":"-")
+                                    .arg(fileAccess.awrite?"w":"-")
+                                    .arg(fileAccess.adelete?"d":"-")
+                                    .arg(fileAccess.aappend?"a":"-"));
+        ui->usersTable->setItem(i,3,item);
+    }
 
 }

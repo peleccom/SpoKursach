@@ -11,14 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>FTP сервер</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -72,6 +72,36 @@
          </widget>
         </item>
         <item>
+         <widget class="QTableWidget" name="usersTable">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showGrid">
+           <bool>false</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>Имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Пароль</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Папка</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Аттрибуты</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
          <widget class="QSplitter" name="splitter">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -89,6 +119,10 @@
            <property name="text">
             <string>...</string>
            </property>
+           <property name="icon">
+            <iconset resource="res.qrc">
+             <normaloff>:/res/user_edit.png</normaloff>:/res/user_edit.png</iconset>
+           </property>
           </widget>
           <widget class="QToolButton" name="deleteUserButton">
            <property name="text">
@@ -99,31 +133,6 @@
              <normaloff>:/res/user_delete.png</normaloff>:/res/user_delete.png</iconset>
            </property>
           </widget>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTableWidget" name="tableWidget">
-          <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
-          </property>
-          <property name="showGrid">
-           <bool>true</bool>
-          </property>
-          <column>
-           <property name="text">
-            <string>Имя</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Пароль</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Группа</string>
-           </property>
-          </column>
          </widget>
         </item>
        </layout>

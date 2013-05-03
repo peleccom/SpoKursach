@@ -9,14 +9,18 @@ class User;
 class Settings
 {
 public:
-    Settings();
     static Settings *getInstance();
     static void destroy();
     bool save();
-    bool load();
-    bool addUser(User &user);
     User getUser(const QString &userName);
+    bool addUser(User &user);
+    QList<User> listUsers();
+    bool getForceUtf8();
+    void setForceUtf8(bool value);
+    bool removeUser(int index);
 private:
+    Settings();
+    bool load();
     static Settings * mInstance;
     QList<User> users;
     bool utf8;

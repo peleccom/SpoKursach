@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Пользователь</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -51,7 +51,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="usernameEdt"/>
      </item>
     </layout>
    </widget>
@@ -65,7 +65,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_2">
+      <widget class="QLineEdit" name="passwordEdt">
        <property name="inputMask">
         <string/>
        </property>
@@ -123,28 +123,28 @@
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="checkBox">
+     <widget class="QCheckBox" name="freadCb">
       <property name="text">
-       <string>Файл - чтение</string>
+       <string>файл чтение</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="checkBox_2">
+     <widget class="QCheckBox" name="fwriteCb">
       <property name="text">
        <string>файл запись</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="checkBox_3">
+     <widget class="QCheckBox" name="fdeleteCb">
       <property name="text">
        <string>файл удаление</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QCheckBox" name="checkBox_4">
+     <widget class="QCheckBox" name="fappendCb">
       <property name="text">
        <string>файл дозапись</string>
       </property>
