@@ -46,7 +46,9 @@ User::User(const User &other){
 }
 
 User User::getUser(const QString &username){
-    return Settings::getInstance()->getUser(username);
+    User user = Settings::getInstance()->getUser(username);
+    user.mIsBad = false;
+    return user;
 }
 
 void traverseNode(const QDomNode &node){

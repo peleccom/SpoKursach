@@ -9,7 +9,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     hash = new QCryptographicHash(QCryptographicHash::Md5);
     workingDirectory = "/";
     ftpFileSystem = NULL;
-    isUTF8 =  true;
+    isUTF8 = Settings::getInstance()->getForceUtf8();
     passiveDataSocket = INVALID_SOCKET;
     renameBeginned = false;
 }
@@ -144,7 +144,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                  setAuthenticated(true);
                  if (ftpFileSystem != NULL)
                     delete ftpFileSystem;
-                 ftpFileSystem = new FtpFileSystem("D:\\Films");
+                 ftpFileSystem = new FtpFileSystem(mUser.getFolder());
             }
             else
             {

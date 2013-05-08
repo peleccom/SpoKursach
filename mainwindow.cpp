@@ -20,10 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->addUserButton, SIGNAL(clicked()),SLOT(adduser()));
     connect(ui->editUserButton,SIGNAL(clicked()),SLOT(edituser()));
     connect(ui->deleteUserButton,SIGNAL(clicked()),SLOT(deleteuser()));
+    connect(ui->Utf8Cb, SIGNAL(clicked(bool)), SLOT(changeUTF8Flag(bool)));
+
 
     ui->usersTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     updateUserTable();
-}
+    ui->Utf8Cb->setChecked(Settings::getInstance()->getForceUtf8());
+
+    }
 
 MainWindow::~MainWindow()
 {
@@ -123,4 +127,8 @@ void MainWindow::updateUserTable(){
         ui->usersTable->setItem(i,3,item);
     }
 
+}
+
+bool MainWindow::changeUTF8Flag(bool value){
+    Settings::getInstance()->setForceUtf8(value);
 }

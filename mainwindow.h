@@ -34,6 +34,7 @@ public slots:
      void edituser();
      void adduser();
      void deleteuser();
+     bool changeUTF8Flag(bool);
 protected:
      void closeEvent(QCloseEvent *event);
 };

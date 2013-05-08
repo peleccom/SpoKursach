@@ -158,10 +158,11 @@ bool Settings::getForceUtf8(){
 
 void Settings::setForceUtf8(bool value){
     utf8 = value;
+    save();
 }
 
 bool Settings::removeUser(int index){
-    if (index > 0 && index < users.size())
+    if (index >= 0 && index < users.size())
     {
         users.removeAt(index);
         return true;
