@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->Utf8Cb, SIGNAL(clicked(bool)), SLOT(changeUTF8Flag(bool)));
 
 
+    connect(ui->actionStartServer, SIGNAL(triggered()), SLOT(on_start_clicked()));
+    connect(ui->actionStopServer, SIGNAL(triggered()),SLOT(on_stop_clicked()));
+    connect(ui->actionAbout, SIGNAL(triggered()),SLOT(showAbout()));
+
     ui->usersTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     updateUserTable();
     ui->Utf8Cb->setChecked(Settings::getInstance()->getForceUtf8());
@@ -131,4 +135,9 @@ void MainWindow::updateUserTable(){
 
 bool MainWindow::changeUTF8Flag(bool value){
     Settings::getInstance()->setForceUtf8(value);
+}
+
+
+void MainWindow::showAbout(){
+    QMessageBox::about(this, "FTP сервер","Курсовой проект на тему \"Реализиция FTP сервера\"");
 }

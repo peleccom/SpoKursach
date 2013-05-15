@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -161,14 +161,14 @@
     <property name="title">
      <string>Сервер</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
+    <addaction name="actionStartServer"/>
+    <addaction name="actionStopServer"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>Помощь</string>
     </property>
-    <addaction name="action_3"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -182,17 +182,17 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action">
+  <action name="actionStartServer">
    <property name="text">
     <string>Запуск</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="actionStopServer">
    <property name="text">
     <string>Остановка</string>
    </property>
   </action>
-  <action name="action_3">
+  <action name="actionAbout">
    <property name="text">
     <string>О программе</string>
    </property>

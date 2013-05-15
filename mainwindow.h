@@ -7,6 +7,7 @@
 #include <log.h>
 #include <settings.h>
 #include <myutils.h>
+#include <QMessageBox>
 namespace Ui {
     class MainWindow;
 }
@@ -35,6 +36,7 @@ public slots:
      void adduser();
      void deleteuser();
      bool changeUTF8Flag(bool);
+     void showAbout();
 protected:
      void closeEvent(QCloseEvent *event);
 };

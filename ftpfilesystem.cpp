@@ -1,9 +1,10 @@
 #include "ftpfilesystem.h"
 
-FtpFileSystem::FtpFileSystem(const QString &basedir)
+FtpFileSystem::FtpFileSystem(const QString &basedir, FileAccess fileAccess)
 {
 
     this->baseDir = basedir;
+    this->fileAccess = fileAccess;
     this->curDir = "/";
 }
 

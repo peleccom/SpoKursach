@@ -144,7 +144,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                  setAuthenticated(true);
                  if (ftpFileSystem != NULL)
                     delete ftpFileSystem;
-                 ftpFileSystem = new FtpFileSystem(mUser.getFolder());
+                 ftpFileSystem = new FtpFileSystem(mUser.getFolder(), mUser.getFileAccess());
             }
             else
             {

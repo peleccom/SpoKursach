@@ -9,7 +9,7 @@
 class FtpFileSystem
 {
 public:
-    FtpFileSystem(const QString &basedir);
+    FtpFileSystem(const QString &basedir, FileAccess fileAccess );
     QString listDir();
     QString appendPath(const QString& path1, const QString& path2);
     bool cdUp();
@@ -25,6 +25,7 @@ public:
 private:
     QString curDir;
     QString baseDir;
+    FileAccess fileAccess;
     QString formatDate(const QDateTime &dateTime);
     bool isWritable(const QString & fileName);
     bool isReadable(const QString & fileName);
