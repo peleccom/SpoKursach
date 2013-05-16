@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>FTP сервер</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="res.qrc">
+    <normaloff>:/res/app.ico</normaloff>:/res/app.ico</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 16. May 19:16:53 2013
+** Created: Thu 16. May 19:36:04 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -70,6 +70,9 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->resize(652, 495);
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/res/app.ico"), QSize(), QIcon::Normal, QIcon::Off);
+        MainWindow->setWindowIcon(icon);
         actionStartServer = new QAction(MainWindow);
         actionStartServer->setObjectName(QString::fromUtf8("actionStartServer"));
         actionStopServer = new QAction(MainWindow);
@@ -156,21 +159,21 @@ public:
         splitter->setOrientation(Qt::Horizontal);
         addUserButton = new QToolButton(splitter);
         addUserButton->setObjectName(QString::fromUtf8("addUserButton"));
-        QIcon icon;
-        icon.addFile(QString::fromUtf8(":/res/user_add.png"), QSize(), QIcon::Normal, QIcon::Off);
-        addUserButton->setIcon(icon);
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/res/user_add.png"), QSize(), QIcon::Normal, QIcon::Off);
+        addUserButton->setIcon(icon1);
         splitter->addWidget(addUserButton);
         editUserButton = new QToolButton(splitter);
         editUserButton->setObjectName(QString::fromUtf8("editUserButton"));
-        QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/res/user_edit.png"), QSize(), QIcon::Normal, QIcon::Off);
-        editUserButton->setIcon(icon1);
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/res/user_edit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        editUserButton->setIcon(icon2);
         splitter->addWidget(editUserButton);
         deleteUserButton = new QToolButton(splitter);
         deleteUserButton->setObjectName(QString::fromUtf8("deleteUserButton"));
-        QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/res/user_delete.png"), QSize(), QIcon::Normal, QIcon::Off);
-        deleteUserButton->setIcon(icon2);
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/res/user_delete.png"), QSize(), QIcon::Normal, QIcon::Off);
+        deleteUserButton->setIcon(icon3);
         splitter->addWidget(deleteUserButton);
 
         verticalLayout_3->addWidget(splitter);

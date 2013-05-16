@@ -4,5 +4,6 @@
         <file>res/user_delete.png</file>
         <file>res/user_edit.png</file>
         <file>res/select_folder.png</file>
+        <file>res/app.ico</file>
     </qresource>
 </RCC>
