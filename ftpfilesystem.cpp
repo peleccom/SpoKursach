@@ -105,18 +105,21 @@ bool FtpFileSystem::deleteFile(const QString &filename){
     QString fullFileName = getFile(filename);
     QFile f(fullFileName);
     QDir d(fullFileName);
-    if (d.exists())
-    {
-        return d.rmdir(fullFileName);
-    }
-    if (f.exists())
-    {
-        return f.remove();
+    if (isDeleteable(filename)){
+        if (d.exists())
+        {
+            return d.rmdir(fullFileName);
+        }
+        if (f.exists())
+        {
+            return f.remove();
+        }
     }
     return false;
 }
 
 bool FtpFileSystem::mkDir(const QString &filename){
+
      QString fullDirPath = getFile(filename);
      QDir dir;
      return dir.mkdir(fullDirPath);
@@ -160,7 +163,8 @@ bool FtpFileSystem::isWritable(const QString &fileName){
 }
 
 bool FtpFileSystem::isDeleteable(const QString &fileName){
-    return isWritable(fileName) && fileAccess.adelete;
+    QFileInfo fi(getFile(fileName));
+    return fi.isWritable() && fileAccess.adelete;
 }
 
 bool FtpFileSystem::isAppendable(const QString &fileName){

@@ -3,7 +3,7 @@
  <forceUTF8>true</forceUTF8>
  <users>
   <user pass="" name="anonymous">
-   <folder fdelete="0" fread="0" fwrite="0" fappend="0">D:/Alex/tmp/ftserverdir</folder>
+   <folder fdelete="1" fread="0" fwrite="0" fappend="0">D:/Alex/tmp/ftserverdir</folder>
   </user>
  </users>
 </settings>
