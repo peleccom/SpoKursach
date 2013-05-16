@@ -124,7 +124,7 @@ void MainWindow::updateUserTable(){
         user = users.at(i);
         item = new QTableWidgetItem(user.getName());
         ui->usersTable->setItem(i,0,item);
-        item = new QTableWidgetItem((user.getPasswordHash().size() != 0)?"*":"");
+        item = new QTableWidgetItem((user.getPasswordHash().isEmpty())?"Нет":"*");
         ui->usersTable->setItem(i,1,item);
         item = new QTableWidgetItem(user.getFolder());
         ui->usersTable->setItem(i,2,item);

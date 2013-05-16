@@ -1,9 +1,9 @@
 <!DOCTYPE settings>
 <settings>
- <forceUTF8>false</forceUTF8>
+ <forceUTF8>true</forceUTF8>
  <users>
-  <user pass="fb7821d4aea7a355a8d7ff50e819707f" name="sasha">
-   <folder fdelete="0" fread="0" fwrite="0" fappend="0"></folder>
+  <user pass="" name="anonymous">
+   <folder fdelete="0" fread="0" fwrite="0" fappend="0">D:/Alex/tmp/ftserverdir</folder>
   </user>
  </users>
 </settings>

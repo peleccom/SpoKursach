@@ -14,6 +14,10 @@ EditUserDialog::EditUserDialog(int userIndex, QWidget *parent) :
         User user = Settings::getInstance()->listUsers().at(userIndex);
         ui->usernameEdt->setText(user.getName());
         passHash = user.getPasswordHash();
+        if (passHash.isEmpty())
+            ui->emptypassRB->setChecked(true);
+        else
+            ui->enterpassRB->setChecked(true);
         ui->folderEdt->setText(user.getFolder());
         FileAccess fileAccess = user.getFileAccess();
         ui->freadCb->setChecked(fileAccess.aread);
@@ -41,7 +45,7 @@ User EditUserDialog::creatUserObject(){
     fa.awrite = ui->fwriteCb->isChecked();
     fa.adelete = ui->fdeleteCb->isChecked();
     fa.aappend= ui->fappendCb->isChecked();
-    return User(ui->usernameEdt->text(), passHash, ui->folderEdt->text(),fa);
+    return User(ui->usernameEdt->text(), ui->enterpassRB->isChecked()?passHash:"", ui->folderEdt->text(),fa);
 }
 
 

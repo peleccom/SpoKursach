@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     log.cpp \
     myutils.cpp \
     ftpprotocol.cpp \
-    users.cpp \
     edituserdialog.cpp \
     clientrecvexception.cpp \
     ftpfilesystem.cpp \
@@ -33,7 +32,6 @@ HEADERS  += mainwindow.h \
     log.h \
     myutils.h \
     ftpprotocol.h \
-    users.h \
     edituserdialog.h \
     clientrecvexception.h \
     ftpfilesystem.h \
@@ -47,6 +45,8 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 RC_FILE = myapp.rc
+
+
 
 
 
