@@ -64,7 +64,6 @@ void MainWindow::closeEvent(QCloseEvent *event){
          ftpServer->stop();
     FTPProtocol::destroy();
     Settings::destroy();
-    Users::destroy();
 }
 
 

@@ -1,7 +1,6 @@
 #ifndef MYUTILS_H
 #define MYUTILS_H
 #include <QDebug>
-#include <users.h>
 #include <ftpprotocol.h>
 typedef enum {
     STOPED,
