@@ -151,12 +151,20 @@ QString FtpFileSystem::getLastModified(const QString &filename)
 
 bool FtpFileSystem::isReadable(const QString &fileName){
     QFileInfo fi(getFile(fileName));
-    return fi.isReadable();
+    return fi.isReadable() && fileAccess.aread;
 }
 
 bool FtpFileSystem::isWritable(const QString &fileName){
     QFileInfo fi(getFile(fileName));
-    return fi.isWritable();
+    return fi.isWritable() && fileAccess.awrite;
+}
+
+bool FtpFileSystem::isDeleteable(const QString &fileName){
+    return isWritable(fileName) && fileAccess.adelete;
+}
+
+bool FtpFileSystem::isAppendable(const QString &fileName){
+    return isWritable(fileName) && isReadable(fileName) && fileAccess.aappend;
 }
 
 bool FtpFileSystem::rename(const QString &oldName, const QString &newName){

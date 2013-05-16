@@ -14,6 +14,7 @@ public:
     bool save();
     User getUser(const QString &userName);
     bool addUser(User &user);
+    bool replaceUser(int index,User &user);
     QList<User> listUsers();
     bool getForceUtf8();
     void setForceUtf8(bool value);

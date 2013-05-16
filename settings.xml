@@ -1,0 +1,9 @@
+<!DOCTYPE settings>
+<settings>
+ <forceUTF8>true</forceUTF8>
+ <users>
+  <user pass="e73359d8ac8a5faf98fdcdba08ac5e0c" name="sasha">
+   <folder fdelete="0" fread="0" fwrite="0" fappend="0">D:/Alex/ucheba/kurs/git/spokursach</folder>
+  </user>
+ </users>
+</settings>

@@ -70,19 +70,22 @@ void MainWindow::closeEvent(QCloseEvent *event){
 
 void MainWindow::edituser(){
     QModelIndexList indexList = ui->usersTable->selectionModel()->selectedIndexes();
-    int row;
+    int row = -1;
     foreach (QModelIndex index, indexList) {
         row = index.row();
         break;
     }
-    EditUserDialog editdialog(row);
-    int result = editdialog.exec();
-    if (result == QDialog::Accepted)
+    if (row != -1)
     {
-        User user = editdialog.creatUserObject();
-        Settings::getInstance()->addUser(user);
-        updateUserTable();
-    }
+        EditUserDialog editdialog(row);
+        int result = editdialog.exec();
+        if (result == QDialog::Accepted)
+        {
+            User user = editdialog.creatUserObject();
+            Settings::getInstance()->replaceUser(row, user);
+            updateUserTable();
+        }
+     }
 }
 
 
@@ -99,13 +102,16 @@ void MainWindow::adduser(){
 
 void MainWindow::deleteuser(){
     QModelIndexList indexList = ui->usersTable->selectionModel()->selectedIndexes();
-    int row;
+    int row = -1;
     foreach (QModelIndex index, indexList) {
         row = index.row();
         break;
     }
-    Settings::getInstance()->removeUser(row);
-    updateUserTable();
+    if (row != -1 )
+    {
+        Settings::getInstance()->removeUser(row);
+        updateUserTable();
+    }
 }
 
 void MainWindow::updateUserTable(){

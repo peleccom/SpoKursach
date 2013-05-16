@@ -169,3 +169,12 @@ bool Settings::removeUser(int index){
     }
     return false;
 }
+
+
+bool Settings::replaceUser(int index, User &user){
+        if (index >= 0 && index < users.size())
+        {
+            users.replace(index, user);
+        }
+        return false;
+}

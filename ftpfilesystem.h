@@ -29,6 +29,8 @@ private:
     QString formatDate(const QDateTime &dateTime);
     bool isWritable(const QString & fileName);
     bool isReadable(const QString & fileName);
+    bool isDeleteable(const QString & fileName);
+    bool isAppendable(const QString & fileName);
 };
 
 #endif // FTPFILESYSTEM_H

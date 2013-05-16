@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'edituserdialog.ui'
 **
-** Created: Wed 15. May 23:31:32 2013
+** Created: Thu 16. May 19:18:28 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -17,7 +17,7 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QDialog>
 #include <QtGui/QDialogButtonBox>
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -32,21 +32,23 @@ class Ui_EditUserDialog
 {
 public:
     QDialogButtonBox *buttonBox;
-    QSplitter *splitter;
     QWidget *layoutWidget;
+    QVBoxLayout *verticalLayout_5;
+    QSplitter *splitter;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
     QLabel *label;
     QLineEdit *usernameEdt;
-    QWidget *layoutWidget1;
+    QWidget *layoutWidget11;
     QVBoxLayout *verticalLayout_2;
     QLabel *label_2;
     QLineEdit *passwordEdt;
-    QWidget *widget;
-    QVBoxLayout *verticalLayout_4;
-    QHBoxLayout *horizontalLayout;
     QLabel *label_5;
     QLineEdit *folderEdt;
     QPushButton *selectFolderButton;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *verticalLayout_3;
     QCheckBox *freadCb;
     QCheckBox *fwriteCb;
     QCheckBox *fdeleteCb;
@@ -56,99 +58,108 @@ public:
     {
         if (EditUserDialog->objectName().isEmpty())
             EditUserDialog->setObjectName(QString::fromUtf8("EditUserDialog"));
-        EditUserDialog->resize(400, 300);
+        EditUserDialog->resize(238, 308);
         buttonBox = new QDialogButtonBox(EditUserDialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(290, 20, 81, 241));
+        buttonBox->setGeometry(QRect(150, 240, 81, 311));
         buttonBox->setOrientation(Qt::Vertical);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-        splitter = new QSplitter(EditUserDialog);
-        splitter->setObjectName(QString::fromUtf8("splitter"));
-        splitter->setGeometry(QRect(19, 1, 191, 123));
-        splitter->setOrientation(Qt::Vertical);
-        layoutWidget = new QWidget(splitter);
+        layoutWidget = new QWidget(EditUserDialog);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        verticalLayout = new QVBoxLayout(layoutWidget);
+        layoutWidget->setGeometry(QRect(19, 1, 114, 300));
+        verticalLayout_5 = new QVBoxLayout(layoutWidget);
+        verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
+        splitter = new QSplitter(layoutWidget);
+        splitter->setObjectName(QString::fromUtf8("splitter"));
+        splitter->setOrientation(Qt::Vertical);
+        layoutWidget1 = new QWidget(splitter);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(layoutWidget);
+        label = new QLabel(layoutWidget1);
         label->setObjectName(QString::fromUtf8("label"));
 
         verticalLayout->addWidget(label);
 
-        usernameEdt = new QLineEdit(layoutWidget);
+        usernameEdt = new QLineEdit(layoutWidget1);
         usernameEdt->setObjectName(QString::fromUtf8("usernameEdt"));
 
         verticalLayout->addWidget(usernameEdt);
 
-        splitter->addWidget(layoutWidget);
-        layoutWidget1 = new QWidget(splitter);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        verticalLayout_2 = new QVBoxLayout(layoutWidget1);
+        splitter->addWidget(layoutWidget1);
+        layoutWidget11 = new QWidget(splitter);
+        layoutWidget11->setObjectName(QString::fromUtf8("layoutWidget11"));
+        verticalLayout_2 = new QVBoxLayout(layoutWidget11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        label_2 = new QLabel(layoutWidget1);
+        label_2 = new QLabel(layoutWidget11);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         verticalLayout_2->addWidget(label_2);
 
-        passwordEdt = new QLineEdit(layoutWidget1);
+        passwordEdt = new QLineEdit(layoutWidget11);
         passwordEdt->setObjectName(QString::fromUtf8("passwordEdt"));
         passwordEdt->setEchoMode(QLineEdit::Password);
 
         verticalLayout_2->addWidget(passwordEdt);
 
-        splitter->addWidget(layoutWidget1);
-        widget = new QWidget(EditUserDialog);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(20, 130, 191, 173));
-        verticalLayout_4 = new QVBoxLayout(widget);
-        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        label_5 = new QLabel(widget);
+        splitter->addWidget(layoutWidget11);
+
+        verticalLayout_5->addWidget(splitter);
+
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
-        horizontalLayout->addWidget(label_5);
+        verticalLayout_5->addWidget(label_5);
 
-
-        verticalLayout_4->addLayout(horizontalLayout);
-
-        folderEdt = new QLineEdit(widget);
+        folderEdt = new QLineEdit(layoutWidget);
         folderEdt->setObjectName(QString::fromUtf8("folderEdt"));
         folderEdt->setEnabled(true);
         folderEdt->setReadOnly(true);
 
-        verticalLayout_4->addWidget(folderEdt);
+        verticalLayout_5->addWidget(folderEdt);
 
-        selectFolderButton = new QPushButton(widget);
+        selectFolderButton = new QPushButton(layoutWidget);
         selectFolderButton->setObjectName(QString::fromUtf8("selectFolderButton"));
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/res/select_folder.png"), QSize(), QIcon::Normal, QIcon::Off);
         selectFolderButton->setIcon(icon);
 
-        verticalLayout_4->addWidget(selectFolderButton);
+        verticalLayout_5->addWidget(selectFolderButton);
 
-        freadCb = new QCheckBox(widget);
+        groupBox = new QGroupBox(layoutWidget);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        verticalLayout_4 = new QVBoxLayout(groupBox);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        freadCb = new QCheckBox(groupBox);
         freadCb->setObjectName(QString::fromUtf8("freadCb"));
 
-        verticalLayout_4->addWidget(freadCb);
+        verticalLayout_3->addWidget(freadCb);
 
-        fwriteCb = new QCheckBox(widget);
+        fwriteCb = new QCheckBox(groupBox);
         fwriteCb->setObjectName(QString::fromUtf8("fwriteCb"));
 
-        verticalLayout_4->addWidget(fwriteCb);
+        verticalLayout_3->addWidget(fwriteCb);
 
-        fdeleteCb = new QCheckBox(widget);
+        fdeleteCb = new QCheckBox(groupBox);
         fdeleteCb->setObjectName(QString::fromUtf8("fdeleteCb"));
 
-        verticalLayout_4->addWidget(fdeleteCb);
+        verticalLayout_3->addWidget(fdeleteCb);
 
-        fappendCb = new QCheckBox(widget);
+        fappendCb = new QCheckBox(groupBox);
         fappendCb->setObjectName(QString::fromUtf8("fappendCb"));
 
-        verticalLayout_4->addWidget(fappendCb);
+        verticalLayout_3->addWidget(fappendCb);
+
+
+        verticalLayout_4->addLayout(verticalLayout_3);
+
+
+        verticalLayout_5->addWidget(groupBox);
 
 
         retranslateUi(EditUserDialog);
@@ -167,10 +178,11 @@ public:
         passwordEdt->setText(QString());
         label_5->setText(QApplication::translate("EditUserDialog", "\320\237\320\260\320\277\320\272\320\260", 0, QApplication::UnicodeUTF8));
         selectFolderButton->setText(QApplication::translate("EditUserDialog", "\320\222\321\213\320\261\321\200\320\260\321\202\321\214", 0, QApplication::UnicodeUTF8));
-        freadCb->setText(QApplication::translate("EditUserDialog", "\321\204\320\260\320\271\320\273 \321\207\321\202\320\265\320\275\320\270\320\265", 0, QApplication::UnicodeUTF8));
-        fwriteCb->setText(QApplication::translate("EditUserDialog", "\321\204\320\260\320\271\320\273 \320\267\320\260\320\277\320\270\321\201\321\214", 0, QApplication::UnicodeUTF8));
-        fdeleteCb->setText(QApplication::translate("EditUserDialog", "\321\204\320\260\320\271\320\273 \321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265", 0, QApplication::UnicodeUTF8));
-        fappendCb->setText(QApplication::translate("EditUserDialog", "\321\204\320\260\320\271\320\273 \320\264\320\276\320\267\320\260\320\277\320\270\321\201\321\214", 0, QApplication::UnicodeUTF8));
+        groupBox->setTitle(QApplication::translate("EditUserDialog", "\320\237\321\200\320\260\320\262\320\260", 0, QApplication::UnicodeUTF8));
+        freadCb->setText(QApplication::translate("EditUserDialog", "\321\207\321\202\320\265\320\275\320\270\320\265", 0, QApplication::UnicodeUTF8));
+        fwriteCb->setText(QApplication::translate("EditUserDialog", "\320\267\320\260\320\277\320\270\321\201\321\214", 0, QApplication::UnicodeUTF8));
+        fdeleteCb->setText(QApplication::translate("EditUserDialog", "\321\203\320\264\320\260\320\273\320\265\320\275\320\270\320\265", 0, QApplication::UnicodeUTF8));
+        fappendCb->setText(QApplication::translate("EditUserDialog", "\320\264\320\276\320\267\320\260\320\277\320\270\321\201\321\214", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
