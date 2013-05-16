@@ -165,6 +165,7 @@ bool Settings::removeUser(int index){
     if (index >= 0 && index < users.size())
     {
         users.removeAt(index);
+        save();
         return true;
     }
     return false;
@@ -175,6 +176,7 @@ bool Settings::replaceUser(int index, User &user){
         if (index >= 0 && index < users.size())
         {
             users.replace(index, user);
+            save();
         }
         return false;
 }
