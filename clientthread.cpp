@@ -3,15 +3,13 @@
 ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     QThread(parent)
 {
-    msocket = client_socket;
-    terminated = false;
+    mSocket = client_socket;
+    mTerminated = false;
     setAuthenticated(false);
-    hash = new QCryptographicHash(QCryptographicHash::Md5);
-    workingDirectory = "/";
     ftpFileSystem = NULL;
-    isUTF8 = Settings::getInstance()->getForceUtf8();
-    passiveDataSocket = INVALID_SOCKET;
-    renameBeginned = false;
+    mIsUTF8 = Settings::getInstance()->getForceUtf8();
+    mPassiveDataSocket = INVALID_SOCKET;
+    mRenameBeginned = false;
 }
 
 
@@ -26,9 +24,9 @@ void ClientThread::setAuthenticated(bool authenticated){
 void ClientThread::run(){
     qDebug() << "Thread id=" << QThread::currentThreadId();
     u_long flag = 0;
-    ioctlsocket(msocket, FIONBIO, &flag);
+    ioctlsocket(mSocket, FIONBIO, &flag);
     // отправляем клиенту приветствие
-    sendString(FTPProtocol::getInstance()->getResponse(220,""), msocket);
+    sendString(FTPProtocol::getInstance()->getResponse(220,""), mSocket);
 
     while(true)
     {
@@ -39,7 +37,7 @@ void ClientThread::run(){
         QByteArray array (s.toStdString().c_str());
         analizeCommand(array);
 
-        if (terminated){
+        if (mTerminated){
             break;
         }
     }
@@ -50,12 +48,12 @@ void ClientThread::run(){
    // printf("-disconnect\n"); PRINTNUSERS
 
     // закрываем сокет
-    closesocket(msocket);
+    closesocket(mSocket);
     qDebug() << "Close client";
 }
 
 void ClientThread::closeconnection(){
-    terminated = true;
+    mTerminated = true;
 }
 
 int ClientThread::sendString(QString mes, SOCKET sock){
@@ -73,7 +71,7 @@ void ClientThread::sendList()
     conn  = openDataConnection();
     if (conn == INVALID_SOCKET)
     {
-        sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+        sendString(FTPProtocol::getInstance()->getResponse(425), mSocket);
         return;
     }
     QString s;
@@ -103,7 +101,7 @@ void ClientThread::sendList()
 QString ClientThread::recvString(){
       char buff[BUF_LENGTH];
       int bytesreaded;
-      bytesreaded = recv(msocket,buff, BUF_LENGTH,0);
+      bytesreaded = recv(mSocket,buff, BUF_LENGTH,0);
       qDebug() << bytesreaded;
       if (bytesreaded != SOCKET_ERROR){
           buff[bytesreaded] = '\0';
@@ -123,7 +121,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         rx.indexIn(bytearray);
         userName = rx.cap(1);
         mUser = User::getUser(userName);
-        sendString(FTPProtocol::getInstance()->getResponse(331), msocket);
+        sendString(FTPProtocol::getInstance()->getResponse(331), mSocket);
         return;
     }
 
@@ -133,14 +131,14 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         QString pass = rx.cap(1);
         if (mUser.isNull())
         {
-            sendString(FTPProtocol::getInstance()->getResponse(503,"PASS send before USER"), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(503,"PASS send before USER"), mSocket);
         }
         else
         {
             if (mUser.auth(pass))
             {
                 // logged in
-                 sendString(FTPProtocol::getInstance()->getResponse(230), msocket);
+                 sendString(FTPProtocol::getInstance()->getResponse(230), mSocket);
                  setAuthenticated(true);
                  if (ftpFileSystem != NULL)
                     delete ftpFileSystem;
@@ -149,7 +147,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             else
             {
                 // incorrect
-                 sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
+                 sendString(FTPProtocol::getInstance()->getResponse(530), mSocket);
             }
         }
         return;
@@ -157,38 +155,38 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
     if (isAuthenticated())
     {
         // RNFR -> RNTO sequence
-        if (renameBeginned){
+        if (mRenameBeginned){
             if (bytearray.contains("RNTO")){
                 QRegExp rx("^RNTO\\s(.*)\r\n");
                 rx.indexIn(fromEncoding(bytearray));
                 QString newName = rx.cap(1);
-                renameBeginned = false;
-                if (ftpFileSystem->rename(renameOldName, newName))
-                    sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                mRenameBeginned = false;
+                if (ftpFileSystem->rename(mRenameOldName, newName))
+                    sendString(FTPProtocol::getInstance()->getResponse(250), mSocket);
                 else
-                    sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                    sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
                 return;
             }
-            sendString(FTPProtocol::getInstance()->getResponse(503), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(503), mSocket);
             return;
         }
         if (bytearray.contains("SYST")){
             QString syst("Windows Type : L8");
-            sendString(FTPProtocol::getInstance()->getResponse(215, syst), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(215, syst), mSocket);
             return;
         }
         if (bytearray.contains("FEAT")){
             QString syst("211-Features:\n\rMDTM\n\rREST STREAM\n\rSIZE\n\rMLST type*;size*;modify*;\n\rMLSD\n\rUTF8\n\rCLNT\n\rMFMT\n\r211 End");
-            sendString(syst, msocket);
+            sendString(syst, mSocket);
             return;
         }
         if (bytearray.contains("HELP")){
             QString syst("HELP OK");
-            sendString(FTPProtocol::getInstance()->getResponse(214, syst), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(214, syst), mSocket);
             return;
         }
         if (bytearray.contains("PWD")){
-            sendString(FTPProtocol::getInstance()->getResponse(257, toEncoding("\""+ftpFileSystem->getWorkingDirectory()+"\"")), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(257, toEncoding("\""+ftpFileSystem->getWorkingDirectory()+"\"")), mSocket);
             return;
         }
         if (bytearray.contains("OPTS")){
@@ -198,13 +196,13 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx2.indexIn(rx.cap(1));
             if (rx2.cap(1) == "ON")
             {
-                isUTF8 = true;
+                mIsUTF8 = true;
             }
             if (rx2.cap(1) == "OFF")
             {
-                isUTF8 = false;
+                mIsUTF8 = false;
             }
-            sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(200), mSocket);
             return;
         }
         if (bytearray.contains("TYPE")){
@@ -212,21 +210,21 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QRegExp rx("^TYPE (\\w)( (\\w))?");
             rx.indexIn(bytearray);
             qDebug() << "type" << rx.cap(1) << rx.cap(3);
-            mtype = rx.cap(1);
-            sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
+            mType = rx.cap(1);
+            sendString(FTPProtocol::getInstance()->getResponse(200), mSocket);
             return;
-            if (mtype == "I")
+            if (mType == "I")
             {
-                sendString(FTPProtocol::getInstance()->getResponse(200), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(200), mSocket);
             }
             else
             {
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             }
             return;
         }
         if (bytearray.contains("PORT")){
-            isActiveMode = true;
+            mIsActiveMode = true;
             QRegExp rx("^PORT (\\d+),(\\d+),(\\d+),(\\d+),(\\d+),(\\d+)");
             rx.indexIn(bytearray);
             int p1,p2;
@@ -237,26 +235,26 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QString addr = rx.cap(1)+"."+rx.cap(2)+"."+rx.cap(3)+"."+rx.cap(4);
             active_addr = addr;
             active_port = p1*256+p2;
-            sendString(FTPProtocol::getInstance()->getResponse(200, "Port ok"), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(200, "Port ok"), mSocket);
             return;
         }
 
         if (bytearray.contains("LIST")){
-            sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(150), mSocket);
             sendList();
-            sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(226), mSocket);
             return;
         }
         if (bytearray.contains("QUIT")){
-            sendString(FTPProtocol::getInstance()->getResponse(221), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(221), mSocket);
             terminate();
             return;
         }
         if (bytearray.contains("CDUP")){
             if (ftpFileSystem->cdUp())
-                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250), mSocket);
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             return;
         }
         if (bytearray.contains("CWD")){
@@ -264,9 +262,9 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             QString subFolder = rx.cap(1);
             if (ftpFileSystem->changeDir(subFolder))
-                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250), mSocket);
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             return;
         }
         if (bytearray.contains("RETR")){
@@ -276,12 +274,12 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QString fullFileName = ftpFileSystem->getFileRead(filename);
             if (fullFileName != NULL)
             {
-                sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(150), mSocket);
                 sendFile(fullFileName);
             }
             else
             {
-                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), mSocket);
             }
             return;
         }
@@ -292,12 +290,12 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QString fullFileName = ftpFileSystem->getFileWrite(filename);
             if (fullFileName != NULL)
             {
-                sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(150), mSocket);
                 recvFile(fullFileName);
             }
             else
             {
-                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), mSocket);
             }
             return;
         }
@@ -306,9 +304,9 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             if (ftpFileSystem->deleteFile(filename))
-                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250), mSocket);
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             return;
         }
         if (bytearray.contains("MKD")){
@@ -316,13 +314,13 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             QString dirName = rx.cap(1);
             if (ftpFileSystem->mkDir(dirName))
-                sendString(FTPProtocol::getInstance()->getResponse(250), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250), mSocket);
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             return;
         }
         if (bytearray.contains("PASV")){
-            isActiveMode = false;
+            mIsActiveMode = false;
             selectPassivePort();
             return;
         }
@@ -333,11 +331,11 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             qint64 size;
             if (ftpFileSystem->getSize(fileName, &size))
             {
-                sendString(FTPProtocol::getInstance()->getResponse(250, QString::number(size)), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250, QString::number(size)), mSocket);
             }
             else
             {
-               sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+               sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             }
             return;
         }
@@ -348,32 +346,32 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QString sdate = ftpFileSystem->getLastModified(fileName);
             if (sdate != NULL)
             {
-                sendString(FTPProtocol::getInstance()->getResponse(250, sdate), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(250, sdate), mSocket);
             }
             else
             {
-               sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+               sendString(FTPProtocol::getInstance()->getResponse(550), mSocket);
             }
             return;
         }
         if (bytearray.contains("RNFR")){
             QRegExp rx("^RNFR\\s(.*)\r\n");
             rx.indexIn(fromEncoding(bytearray));
-            renameOldName = rx.cap(1);
+            mRenameOldName = rx.cap(1);
 
-            if (ftpFileSystem->exist(renameOldName) && ftpFileSystem->isWritable(renameOldName) != NULL)
+            if (ftpFileSystem->exist(mRenameOldName) && ftpFileSystem->isWritable(mRenameOldName) != NULL)
             {
-                sendString(FTPProtocol::getInstance()->getResponse(350), msocket);
-                renameBeginned = true;
+                sendString(FTPProtocol::getInstance()->getResponse(350), mSocket);
+                mRenameBeginned = true;
             }
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550, "Permission denied"), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550, "Permission denied"), mSocket);
             return;
         }
-    sendString(FTPProtocol::getInstance()->getResponse(500), msocket);
+    sendString(FTPProtocol::getInstance()->getResponse(500), mSocket);
     }
     else
-        sendString(FTPProtocol::getInstance()->getResponse(530), msocket);
+        sendString(FTPProtocol::getInstance()->getResponse(530), mSocket);
 }
 
     void ClientThread::sendFile(const QString &filename){
@@ -381,7 +379,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         SOCKET conn = openDataConnection();
         if (conn == INVALID_SOCKET)
         {
-            sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(425), mSocket);
             return;
         }
         char buff[1024];
@@ -389,7 +387,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         QFile f(filename);
         if (!f.open(QIODevice::ReadOnly))
         {
-            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), mSocket);
             return;
         }
         while( (bytesReaded = f.read(buff,1024)) && (bytesReaded != -1))
@@ -399,7 +397,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         f.close();
         shutdown(conn,SD_BOTH);
         closesocket(conn);
-        sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+        sendString(FTPProtocol::getInstance()->getResponse(226), mSocket);
     }
 
     QString getAddrFormat(QString ip, int port){
@@ -416,7 +414,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         SOCKET conn = openDataConnection();
         if (conn == INVALID_SOCKET)
         {
-            sendString(FTPProtocol::getInstance()->getResponse(425), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(425), mSocket);
             return;
         }
         char buff[1024];
@@ -424,7 +422,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         QFile f(filename);
         if (!f.open(QIODevice::WriteOnly))
         {
-            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), msocket);
+            sendString(FTPProtocol::getInstance()->getResponse(550,"Can't open file"), mSocket);
             return;
         }
         while( (bytesReaded = recv(conn, buff, 1024,0)) && (bytesReaded != -1))
@@ -434,7 +432,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         f.close();
         shutdown(conn,SD_BOTH);
         closesocket(conn);
-        sendString(FTPProtocol::getInstance()->getResponse(226), msocket);
+        sendString(FTPProtocol::getInstance()->getResponse(226), mSocket);
     }
 
    ClientThread::~ClientThread()
@@ -445,21 +443,21 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
 
    QByteArray ClientThread::toEncoding(const QString &s)
    {
-       if (isUTF8)
+       if (mIsUTF8)
            return s.toUtf8();
        return s.toAscii();
 
    }
 
    QString ClientThread::fromEncoding(const QByteArray &s){
-       if(isUTF8)
+       if(mIsUTF8)
            return QString::fromUtf8(s.data());
                    return QString::fromAscii(s.data());
    }
 
    // open new data connection
    SOCKET ClientThread::openDataConnection(){
-       if (isActiveMode)
+       if (mIsActiveMode)
        {
            struct hostent *hp;
            unsigned int addr;
@@ -494,7 +492,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
        }
        else
        {
-           return passiveDataSocket;
+           return mPassiveDataSocket;
 
        }
    }
@@ -521,7 +519,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
    void ClientThread::selectPassivePort(){
        // Passive mode
        SOCKET conn;
-       passiveDataSocket = INVALID_SOCKET;
+       mPassiveDataSocket = INVALID_SOCKET;
        for (int port = BEGIN_DATA_PORT; port < END_DATA_PORT; port++)
        {
            if ( SOCKET_ERROR == (conn=socket(AF_INET,SOCK_STREAM,0)))
@@ -550,10 +548,10 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
            int res;
 
            QString saddr = QString("Entering Passive Mode " + getAddrFormat(getLocalIp(),port));
-           sendString(FTPProtocol::getInstance()->getResponse(227, saddr), msocket);
+           sendString(FTPProtocol::getInstance()->getResponse(227, saddr), mSocket);
            client_socket=accept(conn, (sockaddr *)&client_addr, &client_addr_size);
            closesocket(conn);
-           passiveDataSocket = client_socket;
+           mPassiveDataSocket = client_socket;
            return;
        }
 

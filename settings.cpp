@@ -27,14 +27,14 @@ Settings::Settings()
     users.append(User("sasdsda","ssdha","C:/tmp",fileAccess));
 }
 
-bool parseBool(const QString &value){
+bool Settings::parseBool(const QString &value){
     QString val = value.toLower();
     if (val == "true" || val == "yes" || val == "1")
         return true;
     return false;
 }
 
-QDomElement createUserNode(QDomDocument &doc, User& user){
+QDomElement Settings::createUserNode(QDomDocument &doc, User& user){
     QDomElement e_user = doc.createElement("user");
     e_user.setAttribute("pass",user.getPasswordHash());
     e_user.setAttribute("name",user.getName());
@@ -49,7 +49,7 @@ QDomElement createUserNode(QDomDocument &doc, User& user){
     return e_user;
 }
 
-User parseUserNode(const QDomElement &el){
+User Settings::parseUserNode(const QDomElement &el){
 
     QString folder;
     FileAccess fileAccess;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 17. May 19:31:16 2013
+** Created: Fri 17. May 20:09:50 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -27,7 +27,6 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QTableWidget>
 #include <QtGui/QTextEdit>
-#include <QtGui/QToolBar>
 #include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
@@ -40,6 +39,7 @@ public:
     QAction *actionStartServer;
     QAction *actionStopServer;
     QAction *actionAbout;
+    QAction *action;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QTabWidget *tabWidget;
@@ -62,7 +62,6 @@ public:
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menu_2;
-    QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -88,6 +87,8 @@ public:
         QIcon icon3;
         icon3.addFile(QString::fromUtf8(":/res/about.png"), QSize(), QIcon::Normal, QIcon::Off);
         actionAbout->setIcon(icon3);
+        action = new QAction(MainWindow);
+        action->setObjectName(QString::fromUtf8("action"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
@@ -205,9 +206,6 @@ public:
         menu_2 = new QMenu(menuBar);
         menu_2->setObjectName(QString::fromUtf8("menu_2"));
         MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
@@ -235,6 +233,7 @@ public:
         actionStopServer->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindow", "\320\236 \320\277\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\265", 0, QApplication::UnicodeUTF8));
         actionAbout->setShortcut(QApplication::translate("MainWindow", "F1", 0, QApplication::UnicodeUTF8));
+        action->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\272\321\200\321\213\321\202\321\214 \320\277\321\200\320\276\320\263\321\200\320\260\320\274\320\274\321\203", 0, QApplication::UnicodeUTF8));
         start->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", 0, QApplication::UnicodeUTF8));
         stop->setText(QApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\201\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         clearLogBtn->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\273\320\276\320\263", 0, QApplication::UnicodeUTF8));

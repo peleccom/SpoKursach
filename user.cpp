@@ -12,7 +12,7 @@ User::User(const QString &userName, const QString &passHash, const QString &fold
     mPassswordHash = passHash;
     mFolder = folder;
     mFileAccess = fileAccess;
-    if (userName == "anonymous" && passHash.size() == 0 )
+    if (userName == "anonymous" && passHash.isEmpty() )
     {
         mIsAnonymousAccessed = true;
     }
@@ -51,44 +51,6 @@ User User::getUser(const QString &username){
     return user;
 }
 
-void traverseNode(const QDomNode &node){
-    QDomNode domNode = node.firstChild();
-    while(!domNode.isNull())
-    {
-        if (domNode.isElement())
-        {
-            QDomElement domElement = domNode.toElement();
-            if (!domElement.isNull()){
-                if (domElement.tagName() == "user")
-                {
-                    qDebug()<< "Attr: "<< domElement.attribute("number","");
-                }
-                else
-                {
-                   qDebug()<< "tagname" << domElement.tagName() << "Text\n"<< domElement.text();
-                }
-            }
-        }
-        traverseNode(domNode);
-        domNode = domNode.nextSibling();
-    }
-
-}
-
-void User::listUsers(){
-    QDomDocument domDoc;
-    QFile file("config.xml");
-    if (!file.open(QIODevice::ReadOnly));
-    {
-        return;
-    }
-    if (domDoc.setContent(&file))
-    {
-        QDomElement domElement = domDoc.documentElement();
-        traverseNode(domElement);
-    }
-    file.close();
-}
 
 bool User::isAuth(){
     return mIsAuth;

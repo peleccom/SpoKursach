@@ -25,6 +25,9 @@ private:
     static Settings * mInstance;
     QList<User> users;
     bool utf8;
+    bool parseBool(const QString &value);
+    QDomElement createUserNode(QDomDocument &doc, User& user);
+    User parseUserNode(const QDomElement &el);
 
 };
 

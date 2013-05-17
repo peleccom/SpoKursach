@@ -3,7 +3,6 @@
 #include <winsock.h>
 #include <QThread>
 #include <myutils.h>
-#include <QCryptographicHash>
 #include <ftpfilesystem.h>
 #include <QFile>
 #include <user.h>
@@ -24,17 +23,15 @@ signals:
 public slots:
     void closeconnection();
 private:
-    SOCKET msocket;
-    SOCKET passiveDataSocket;
-    bool terminated;
+    SOCKET mSocket;
+    SOCKET mPassiveDataSocket;
+    bool mTerminated;
     bool mIsUserAuthenticated;
-    bool isActiveMode;
-    bool isUTF8;
-    bool renameBeginned;
-    QString renameOldName;
-    QString mtype;
-    QString workingDirectory;
-    QCryptographicHash *hash;
+    bool mIsActiveMode;
+    bool mIsUTF8;
+    bool mRenameBeginned;
+    QString mRenameOldName;
+    QString mType;
     QString active_addr;
     User mUser;
     FtpFileSystem *ftpFileSystem;

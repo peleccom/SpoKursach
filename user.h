@@ -13,15 +13,11 @@ class User
 {
 public:
     User();
-    User(const QString &userName, const QString &passHash, const QString &folder, FileAccess fileAccess);
+    User(const User &other);
     // return user or null if no such user
     // вернет обьект пользователя если он существует
     static User getUser(const QString &username);
     static QString getHash(const QString &plainText);
-    static void listUsers();
-    static void deleteUser(const QString &userName);
-    static void saveUser(const QString& userName, const QString &pass, const QString &folder);
-    User(const User &other);
     QString getName() const;
     bool auth(const QString &pass);
     bool isNull();
@@ -32,6 +28,8 @@ public:
     FileAccess getFileAccess();
 private:
     friend class Settings;
+    friend class EditUserDialog;
+    User(const QString &userName, const QString &passHash, const QString &folder, FileAccess fileAccess);
     User(const QString &userName);
     QString mUserName;
     QString mPassswordHash;
