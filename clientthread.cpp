@@ -367,7 +367,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
                 renameBeginned = true;
             }
             else
-                sendString(FTPProtocol::getInstance()->getResponse(550), msocket);
+                sendString(FTPProtocol::getInstance()->getResponse(550, "Permission denied"), msocket);
             return;
         }
     sendString(FTPProtocol::getInstance()->getResponse(500), msocket);

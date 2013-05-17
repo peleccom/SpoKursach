@@ -160,7 +160,7 @@ bool FtpFileSystem::isReadable(const QString &fileName){
 
 bool FtpFileSystem::isWritable(const QString &fileName){
     QFileInfo fi(getFileFullPath(fileName));
-    return fi.isWritable() && mFileAccess.awrite;
+    return (fi.isWritable() && mFileAccess.awrite) || (!fi.exists() && mFileAccess.awrite);
 }
 
 bool FtpFileSystem::isDeleteable(const QString &fileName){

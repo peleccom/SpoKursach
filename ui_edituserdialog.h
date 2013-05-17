@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'edituserdialog.ui'
 **
-** Created: Thu 16. May 20:51:32 2013
+** Created: Fri 17. May 19:38:08 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,7 +33,7 @@ class Ui_EditUserDialog
 {
 public:
     QDialogButtonBox *buttonBox;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout_9;
     QVBoxLayout *verticalLayout_5;
     QLabel *label;
@@ -63,26 +63,26 @@ public:
     {
         if (EditUserDialog->objectName().isEmpty())
             EditUserDialog->setObjectName(QString::fromUtf8("EditUserDialog"));
-        EditUserDialog->resize(323, 348);
+        EditUserDialog->resize(248, 348);
         buttonBox = new QDialogButtonBox(EditUserDialog);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(230, 270, 81, 311));
+        buttonBox->setGeometry(QRect(160, 260, 81, 311));
         buttonBox->setOrientation(Qt::Vertical);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-        widget = new QWidget(EditUserDialog);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(10, 5, 138, 336));
-        verticalLayout_9 = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(EditUserDialog);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(10, 5, 138, 336));
+        verticalLayout_9 = new QVBoxLayout(layoutWidget);
         verticalLayout_9->setObjectName(QString::fromUtf8("verticalLayout_9"));
         verticalLayout_9->setContentsMargins(0, 0, 0, 0);
         verticalLayout_5 = new QVBoxLayout();
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
 
         verticalLayout_5->addWidget(label);
 
-        usernameEdt = new QLineEdit(widget);
+        usernameEdt = new QLineEdit(layoutWidget);
         usernameEdt->setObjectName(QString::fromUtf8("usernameEdt"));
 
         verticalLayout_5->addWidget(usernameEdt);
@@ -92,7 +92,7 @@ public:
 
         verticalLayout_8 = new QVBoxLayout();
         verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         verticalLayout_8->addWidget(label_2);
@@ -101,7 +101,7 @@ public:
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        enterpassRB = new QRadioButton(widget);
+        enterpassRB = new QRadioButton(layoutWidget);
         enterpassRB->setObjectName(QString::fromUtf8("enterpassRB"));
         enterpassRB->setChecked(true);
 
@@ -109,7 +109,7 @@ public:
 
         verticalLayout = new QVBoxLayout();
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        passwordEdt = new QLineEdit(widget);
+        passwordEdt = new QLineEdit(layoutWidget);
         passwordEdt->setObjectName(QString::fromUtf8("passwordEdt"));
         passwordEdt->setEchoMode(QLineEdit::Password);
 
@@ -123,7 +123,7 @@ public:
 
         verticalLayout_6 = new QVBoxLayout();
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
-        emptypassRB = new QRadioButton(widget);
+        emptypassRB = new QRadioButton(layoutWidget);
         emptypassRB->setObjectName(QString::fromUtf8("emptypassRB"));
 
         verticalLayout_6->addWidget(emptypassRB);
@@ -139,19 +139,19 @@ public:
 
         verticalLayout_7 = new QVBoxLayout();
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
-        label_5 = new QLabel(widget);
+        label_5 = new QLabel(layoutWidget);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         verticalLayout_7->addWidget(label_5);
 
-        folderEdt = new QLineEdit(widget);
+        folderEdt = new QLineEdit(layoutWidget);
         folderEdt->setObjectName(QString::fromUtf8("folderEdt"));
         folderEdt->setEnabled(true);
         folderEdt->setReadOnly(true);
 
         verticalLayout_7->addWidget(folderEdt);
 
-        selectFolderButton = new QPushButton(widget);
+        selectFolderButton = new QPushButton(layoutWidget);
         selectFolderButton->setObjectName(QString::fromUtf8("selectFolderButton"));
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/res/select_folder.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -162,7 +162,7 @@ public:
 
         verticalLayout_9->addLayout(verticalLayout_7);
 
-        groupBox = new QGroupBox(widget);
+        groupBox = new QGroupBox(layoutWidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
         verticalLayout_4 = new QVBoxLayout(groupBox);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
@@ -194,12 +194,8 @@ public:
 
         verticalLayout_9->addWidget(groupBox);
 
+        layoutWidget->raise();
         buttonBox->raise();
-        enterpassRB->raise();
-        emptypassRB->raise();
-        folderEdt->raise();
-        label_5->raise();
-        emptypassRB->raise();
 
         retranslateUi(EditUserDialog);
         QObject::connect(buttonBox, SIGNAL(accepted()), EditUserDialog, SLOT(accept()));
