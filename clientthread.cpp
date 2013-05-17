@@ -273,16 +273,32 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             QRegExp rx("^RETR\\s(.*)\r\n");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
-            sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-            sendFile(ftpFileSystem->getFile(filename));
+            QString fullFileName = ftpFileSystem->getFileRead(filename);
+            if (fullFileName != NULL)
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+                sendFile(fullFileName);
+            }
+            else
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
+            }
             return;
         }
         if (bytearray.contains("STOR")){
             QRegExp rx("^STOR\\s(.*)\r\n");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
-            sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
-            recvFile(ftpFileSystem->getFile(filename));
+            QString fullFileName = ftpFileSystem->getFileWrite(filename);
+            if (fullFileName != NULL)
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(150), msocket);
+                recvFile(fullFileName);
+            }
+            else
+            {
+                sendString(FTPProtocol::getInstance()->getResponse(550,"Permission denied"), msocket);
+            }
             return;
         }
         if (bytearray.contains("DELE")){
@@ -345,7 +361,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             renameOldName = rx.cap(1);
 
-            if (ftpFileSystem->exist(renameOldName))
+            if (ftpFileSystem->exist(renameOldName) && ftpFileSystem->isWritable(renameOldName) != NULL)
             {
                 sendString(FTPProtocol::getInstance()->getResponse(350), msocket);
                 renameBeginned = true;

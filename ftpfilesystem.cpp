@@ -3,9 +3,9 @@
 FtpFileSystem::FtpFileSystem(const QString &basedir, FileAccess fileAccess)
 {
 
-    this->baseDir = basedir;
-    this->fileAccess = fileAccess;
-    this->curDir = "/";
+    this->mBaseDir = basedir;
+    this->mFileAccess = fileAccess;
+    this->mCurDir = "/";
 }
 
 QString FtpFileSystem::appendPath(const QString& path1, const QString& path2)
@@ -22,7 +22,7 @@ QString FtpFileSystem::formatDate(const QDateTime &dateTime)
 }
 
 QString FtpFileSystem::listDir(){
-    QString fullPath = appendPath(baseDir, curDir);
+    QString fullPath = appendPath(mBaseDir, mCurDir);
     QDir dir(fullPath);
     if (!(dir.exists()))
         return NULL;
@@ -49,19 +49,19 @@ QString FtpFileSystem::listDir(){
 
 
 bool FtpFileSystem::cdUp(){
-    int position = curDir.lastIndexOf("/");
+    int position = mCurDir.lastIndexOf("/");
     if (position >= 0)
     {
-        curDir.remove(position, curDir.size() - position);
-        if (!curDir.size())
-            curDir = "/";
+        mCurDir.remove(position, mCurDir.size() - position);
+        if (!mCurDir.size())
+            mCurDir = "/";
         return true;
     }
     return false;
 }
 
 QString FtpFileSystem::getWorkingDirectory(){
-    return curDir;
+    return mCurDir;
 }
 
 bool FtpFileSystem::changeDir(const QString &subfolder){
@@ -71,10 +71,10 @@ bool FtpFileSystem::changeDir(const QString &subfolder){
     {
         newDir = QDir::cleanPath(subfolder);
         newDir.replace("/..","/");
-        newFullPathDir = appendPath(baseDir,newDir);
-        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= baseDir.size()))
+        newFullPathDir = appendPath(mBaseDir,newDir);
+        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= mBaseDir.size()))
         {
-            curDir = newDir;
+            mCurDir = newDir;
             return true;
         }
         else
@@ -82,13 +82,13 @@ bool FtpFileSystem::changeDir(const QString &subfolder){
     }
     else
     {
-        newDir = appendPath(curDir, subfolder);
+        newDir = appendPath(mCurDir, subfolder);
         newDir.replace("//","/");
         newDir.replace("/..","/");
-        newFullPathDir = appendPath(baseDir,newDir);
-        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= baseDir.size()))
+        newFullPathDir = appendPath(mBaseDir,newDir);
+        if ((QDir(newFullPathDir).exists()) && (newFullPathDir.size() >= mBaseDir.size()))
         {
-            curDir = newDir;
+            mCurDir = newDir;
             return true;
         }
         else
@@ -96,13 +96,14 @@ bool FtpFileSystem::changeDir(const QString &subfolder){
     }
 }
 
-QString FtpFileSystem::getFile(const QString& filename)
+// Return file real path
+QString FtpFileSystem::getFileFullPath(const QString& filename)
 {
-    return  appendPath(baseDir,appendPath(curDir,filename));
+    return  appendPath(mBaseDir,appendPath(mCurDir,filename));
 }
 
 bool FtpFileSystem::deleteFile(const QString &filename){
-    QString fullFileName = getFile(filename);
+    QString fullFileName = getFileFullPath(filename);
     QFile f(fullFileName);
     QDir d(fullFileName);
     if (isDeleteable(filename)){
@@ -120,14 +121,14 @@ bool FtpFileSystem::deleteFile(const QString &filename){
 
 bool FtpFileSystem::mkDir(const QString &filename){
 
-     QString fullDirPath = getFile(filename);
+     QString fullDirPath = getFileFullPath(filename);
      QDir dir;
      return dir.mkdir(fullDirPath);
 }
 
 bool FtpFileSystem::getSize(const QString &filename,qint64 *size )
 {
-        QString fullFileName = getFile(filename);
+        QString fullFileName = getFileFullPath(filename);
         QFile f(fullFileName);
         if (f.exists())
         {
@@ -140,7 +141,7 @@ bool FtpFileSystem::getSize(const QString &filename,qint64 *size )
 
 QString FtpFileSystem::getLastModified(const QString &filename)
 {
-        QString fullFileName = getFile(filename);
+        QString fullFileName = getFileFullPath(filename);
         QFile f(fullFileName);
         if (f.exists())
         {
@@ -153,31 +154,44 @@ QString FtpFileSystem::getLastModified(const QString &filename)
 
 
 bool FtpFileSystem::isReadable(const QString &fileName){
-    QFileInfo fi(getFile(fileName));
-    return fi.isReadable() && fileAccess.aread;
+    QFileInfo fi(getFileFullPath(fileName));
+    return fi.isReadable() && mFileAccess.aread;
 }
 
 bool FtpFileSystem::isWritable(const QString &fileName){
-    QFileInfo fi(getFile(fileName));
-    return fi.isWritable() && fileAccess.awrite;
+    QFileInfo fi(getFileFullPath(fileName));
+    return fi.isWritable() && mFileAccess.awrite;
 }
 
 bool FtpFileSystem::isDeleteable(const QString &fileName){
-    QFileInfo fi(getFile(fileName));
-    return fi.isWritable() && fileAccess.adelete;
+    QFileInfo fi(getFileFullPath(fileName));
+    return fi.isWritable() && mFileAccess.adelete;
 }
 
 bool FtpFileSystem::isAppendable(const QString &fileName){
-    return isWritable(fileName) && isReadable(fileName) && fileAccess.aappend;
+    return isWritable(fileName) && isReadable(fileName) && mFileAccess.aappend;
 }
 
 bool FtpFileSystem::rename(const QString &oldName, const QString &newName){
-    QString oldFullPath = getFile(oldName);
-    QString newFullPath = getFile(newName);
+    QString oldFullPath = getFileFullPath(oldName);
+    QString newFullPath = getFileFullPath(newName);
     return QFile::rename(oldFullPath, newFullPath);
 }
 
 bool FtpFileSystem::exist(const QString &fileName){
-    QFile f(getFile(fileName));
+    QFile f(getFileFullPath(fileName));
     return f.exists();
+}
+
+QString FtpFileSystem::getFileRead(const QString &filename){
+    if (isReadable(filename))
+        return getFileFullPath(filename);
+    return NULL;
+}
+
+QString FtpFileSystem::getFileWrite(const QString &filename){
+    if (isWritable(filename))
+        return getFileFullPath(filename);
+    else
+        return NULL;
 }

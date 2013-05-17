@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 16. May 19:36:04 2013
+** Created: Fri 17. May 19:31:16 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -75,10 +75,19 @@ public:
         MainWindow->setWindowIcon(icon);
         actionStartServer = new QAction(MainWindow);
         actionStartServer->setObjectName(QString::fromUtf8("actionStartServer"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/res/start.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionStartServer->setIcon(icon1);
         actionStopServer = new QAction(MainWindow);
         actionStopServer->setObjectName(QString::fromUtf8("actionStopServer"));
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/res/stop.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionStopServer->setIcon(icon2);
         actionAbout = new QAction(MainWindow);
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
+        QIcon icon3;
+        icon3.addFile(QString::fromUtf8(":/res/about.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionAbout->setIcon(icon3);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
@@ -104,16 +113,21 @@ public:
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         start = new QPushButton(tab);
         start->setObjectName(QString::fromUtf8("start"));
+        start->setIcon(icon1);
 
         verticalLayout_2->addWidget(start);
 
         stop = new QPushButton(tab);
         stop->setObjectName(QString::fromUtf8("stop"));
+        stop->setIcon(icon2);
 
         verticalLayout_2->addWidget(stop);
 
         clearLogBtn = new QPushButton(tab);
         clearLogBtn->setObjectName(QString::fromUtf8("clearLogBtn"));
+        QIcon icon4;
+        icon4.addFile(QString::fromUtf8(":/res/clear.png"), QSize(), QIcon::Normal, QIcon::Off);
+        clearLogBtn->setIcon(icon4);
 
         verticalLayout_2->addWidget(clearLogBtn);
 
@@ -159,21 +173,21 @@ public:
         splitter->setOrientation(Qt::Horizontal);
         addUserButton = new QToolButton(splitter);
         addUserButton->setObjectName(QString::fromUtf8("addUserButton"));
-        QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/res/user_add.png"), QSize(), QIcon::Normal, QIcon::Off);
-        addUserButton->setIcon(icon1);
+        QIcon icon5;
+        icon5.addFile(QString::fromUtf8(":/res/user_add.png"), QSize(), QIcon::Normal, QIcon::Off);
+        addUserButton->setIcon(icon5);
         splitter->addWidget(addUserButton);
         editUserButton = new QToolButton(splitter);
         editUserButton->setObjectName(QString::fromUtf8("editUserButton"));
-        QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/res/user_edit.png"), QSize(), QIcon::Normal, QIcon::Off);
-        editUserButton->setIcon(icon2);
+        QIcon icon6;
+        icon6.addFile(QString::fromUtf8(":/res/user_edit.png"), QSize(), QIcon::Normal, QIcon::Off);
+        editUserButton->setIcon(icon6);
         splitter->addWidget(editUserButton);
         deleteUserButton = new QToolButton(splitter);
         deleteUserButton->setObjectName(QString::fromUtf8("deleteUserButton"));
-        QIcon icon3;
-        icon3.addFile(QString::fromUtf8(":/res/user_delete.png"), QSize(), QIcon::Normal, QIcon::Off);
-        deleteUserButton->setIcon(icon3);
+        QIcon icon7;
+        icon7.addFile(QString::fromUtf8(":/res/user_delete.png"), QSize(), QIcon::Normal, QIcon::Off);
+        deleteUserButton->setIcon(icon7);
         splitter->addWidget(deleteUserButton);
 
         verticalLayout_3->addWidget(splitter);
@@ -216,8 +230,11 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "FTP \321\201\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         actionStartServer->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272", 0, QApplication::UnicodeUTF8));
+        actionStartServer->setShortcut(QApplication::translate("MainWindow", "Ctrl+S", 0, QApplication::UnicodeUTF8));
         actionStopServer->setText(QApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\320\275\320\276\320\262\320\272\320\260", 0, QApplication::UnicodeUTF8));
+        actionStopServer->setShortcut(QApplication::translate("MainWindow", "Ctrl+X", 0, QApplication::UnicodeUTF8));
         actionAbout->setText(QApplication::translate("MainWindow", "\320\236 \320\277\321\200\320\276\320\263\321\200\320\260\320\274\320\274\320\265", 0, QApplication::UnicodeUTF8));
+        actionAbout->setShortcut(QApplication::translate("MainWindow", "F1", 0, QApplication::UnicodeUTF8));
         start->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", 0, QApplication::UnicodeUTF8));
         stop->setText(QApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\201\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         clearLogBtn->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\273\320\276\320\263", 0, QApplication::UnicodeUTF8));

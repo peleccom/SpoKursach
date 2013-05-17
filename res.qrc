@@ -5,5 +5,9 @@
         <file>res/user_edit.png</file>
         <file>res/select_folder.png</file>
         <file>res/app.ico</file>
+        <file>res/start.png</file>
+        <file>res/stop.png</file>
+        <file>res/clear.png</file>
+        <file>res/about.png</file>
     </qresource>
 </RCC>
