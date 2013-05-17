@@ -36,7 +36,7 @@ private:
     User mUser;
     FtpFileSystem *ftpFileSystem;
     int active_port;
-    int sendString(QString mes, SOCKET sock);
+    int sendString(QString mes);
     QString recvString();
     void analizeCommand(QByteArray&);
     bool isAuthenticated();
