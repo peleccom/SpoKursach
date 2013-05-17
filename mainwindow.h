@@ -37,6 +37,8 @@ public slots:
      void deleteuser();
      bool changeUTF8Flag(bool);
      void showAbout();
+     void serverstarted();
+     void serverstopped();
 protected:
      void closeEvent(QCloseEvent *event);
 };

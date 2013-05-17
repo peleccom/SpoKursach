@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ftpServer, SIGNAL(onStarted(QString)), this, SLOT(eventHandler(QString)));
     connect(ftpServer, SIGNAL(onClose(QString)), this, SLOT(eventHandler(QString)));
     connect(ftpServer, SIGNAL(onEvent(QString)), this, SLOT(eventHandler(QString)));
-
+    connect(ftpServer,SIGNAL(onStarted(QString)),SLOT(serverstarted()));
+    connect(ftpServer,SIGNAL(onClose(QString)),SLOT(serverstopped()));
 
     connect(ui->addUserButton, SIGNAL(clicked()),SLOT(adduser()));
     connect(ui->editUserButton,SIGNAL(clicked()),SLOT(edituser()));
@@ -42,7 +43,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_start_clicked(){
     if (ftpServer == NULL)
+    {
         ftpServer = new FtpServer(this);
+    }
    ftpServer->start();
 }
 
@@ -142,7 +145,14 @@ bool MainWindow::changeUTF8Flag(bool value){
     Settings::getInstance()->setForceUtf8(value);
 }
 
-
 void MainWindow::showAbout(){
     QMessageBox::about(this, "FTP сервер","Курсовой проект на тему \"Реализиция FTP сервера\"");
+}
+
+void MainWindow::serverstarted(){
+    ui->statusLabel->setPixmap(QPixmap(":/res/green.png"));
+}
+
+void MainWindow::serverstopped(){
+    ui->statusLabel->setPixmap(QPixmap(":/res/red.png"));
 }

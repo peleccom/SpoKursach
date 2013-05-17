@@ -85,7 +85,7 @@ void FTPCore::run(){
                 //plususer();      // увеличиваем счетчик
                          // подключившихся клиентов
 
-                emit onnewconnection(inet_ntoa(client_addr.sin_addr));
+                emit onnewconnection(QString("%1:%2").arg(inet_ntoa(client_addr.sin_addr)).arg(client_addr.sin_port));
 
                 clientthread = new ClientThread(client_socket);
                 connections.append(clientthread);

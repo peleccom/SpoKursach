@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 17. May 20:09:50 2013
+** Created: Fri 17. May 23:43:54 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -59,6 +59,7 @@ public:
     QToolButton *addUserButton;
     QToolButton *editUserButton;
     QToolButton *deleteUserButton;
+    QLabel *statusLabel;
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menu_2;
@@ -197,6 +198,20 @@ public:
 
         verticalLayout->addWidget(tabWidget);
 
+        statusLabel = new QLabel(centralWidget);
+        statusLabel->setObjectName(QString::fromUtf8("statusLabel"));
+        statusLabel->setEnabled(true);
+        statusLabel->setMaximumSize(QSize(64, 64));
+        statusLabel->setLayoutDirection(Qt::RightToLeft);
+        statusLabel->setFrameShadow(QFrame::Sunken);
+        statusLabel->setLineWidth(5);
+        statusLabel->setMidLineWidth(0);
+        statusLabel->setPixmap(QPixmap(QString::fromUtf8(":/res/red.png")));
+        statusLabel->setScaledContents(true);
+        statusLabel->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+
+        verticalLayout->addWidget(statusLabel);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -252,6 +267,7 @@ public:
         editUserButton->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         deleteUserButton->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("MainWindow", "\320\235\320\260\321\201\321\202\321\200\320\276\320\271\320\272\320\270", 0, QApplication::UnicodeUTF8));
+        statusLabel->setText(QString());
         menu->setTitle(QApplication::translate("MainWindow", "\320\241\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         menu_2->setTitle(QApplication::translate("MainWindow", "\320\237\320\276\320\274\320\276\321\211\321\214", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

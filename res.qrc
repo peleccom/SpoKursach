@@ -9,5 +9,7 @@
         <file>res/stop.png</file>
         <file>res/clear.png</file>
         <file>res/about.png</file>
+        <file>res/red.png</file>
+        <file>res/green.png</file>
     </qresource>
 </RCC>

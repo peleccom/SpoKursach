@@ -54,6 +54,7 @@ void ClientThread::run(){
 
 void ClientThread::closeconnection(){
     mTerminated = true;
+    mSocket = INVALID_SOCKET;
 }
 
 int ClientThread::sendString(QString mes){
