@@ -20,6 +20,7 @@ public:
 signals:
     void onerror(const QString &);
     void onlog(const QString &);
+    void oncloseconnection();
 public slots:
     void closeconnection();
 private:

@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ftpServer, SIGNAL(onEvent(QString)), this, SLOT(eventHandler(QString)));
     connect(ftpServer,SIGNAL(onStarted(QString)),SLOT(serverstarted()));
     connect(ftpServer,SIGNAL(onClose(QString)),SLOT(serverstopped()));
+    connect(ftpServer,SIGNAL(clientschanged(int)), ui->clientslcd, SLOT(display(int)));
 
     connect(ui->addUserButton, SIGNAL(clicked()),SLOT(adduser()));
     connect(ui->editUserButton,SIGNAL(clicked()),SLOT(edituser()));

@@ -4,6 +4,7 @@ FtpServer::FtpServer(QObject *parent) :
 {
     mSTATUS = STOPED;
     clients_count = 0;
+    emit clientschanged(clients_count);
 }
 
 
@@ -20,6 +21,7 @@ void FtpServer::start(){
         QObject::connect(ftpcore, SIGNAL(onstopped()), SLOT(stoped()));
         QObject::connect(ftpcore, SIGNAL(onnewconnection(const QString&)), SLOT(newconnection(const QString&)));
         QObject::connect(ftpcore, SIGNAL(onerror(const QString&)), SLOT(servererror(const QString&)));
+        QObject::connect(ftpcore,SIGNAL(oncloseconnection()),SLOT(connectionclosed()));
         ftpcore->moveToThread(mainthread);
         mainthread->start();
         mSTATUS = STARTING;
@@ -46,6 +48,7 @@ void FtpServer::started(){
    mSTATUS = STARTED;
    Settings::getInstance();
    clients_count = 0;
+   emit clientschanged(clients_count);
 }
 
 void FtpServer::stoped(){
@@ -61,7 +64,8 @@ void FtpServer::stoped(){
 
 void FtpServer::newconnection(const QString& ip){
     emit onEvent("Новое подключение ip: " + ip);
-    clients_count ++;
+    clients_count++;
+    emit clientschanged(clients_count);
 }
 
 
@@ -79,4 +83,10 @@ FtpServer::~FtpServer(){
 
 STATUS FtpServer::getStatus(){
     return mSTATUS;
+}
+
+
+void FtpServer::connectionclosed(){
+    clients_count--;
+    emit clientschanged(clients_count);
 }

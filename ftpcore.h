@@ -21,9 +21,11 @@ signals:
     void onstopped();
     void onerror(const QString& s);
     void onnewconnection(const QString& ip);
+    void oncloseconnection();
 public slots:
      void run();
      void stop();
+     void connectionclosed();
 private:
 
     bool InitWinsock();

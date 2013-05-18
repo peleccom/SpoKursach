@@ -89,6 +89,7 @@ void FTPCore::run(){
 
                 clientthread = new ClientThread(client_socket);
                 connections.append(clientthread);
+                connect(clientthread, SIGNAL(oncloseconnection()),SLOT(connectionclosed()),Qt::QueuedConnection);
                  clientthread->start();
            }
             if (terminated){
@@ -99,7 +100,7 @@ void FTPCore::run(){
         {
             client->closeconnection();
             qDebug() << "Close connection";
-           //client->wait();
+            client->wait();
             qDebug() << "wait";
             delete client;
         }
@@ -126,4 +127,9 @@ bool FTPCore::InitWinsock(){
     }
     qDebug() << "Winsock started";
     return true;
+}
+
+
+void FTPCore::connectionclosed(){
+    emit oncloseconnection();
 }

@@ -50,11 +50,12 @@ void ClientThread::run(){
     // закрываем сокет
     closesocket(mSocket);
     qDebug() << "Close client";
+    emit oncloseconnection();
 }
 
 void ClientThread::closeconnection(){
     mTerminated = true;
-    mSocket = INVALID_SOCKET;
+    closesocket(mSocket);
 }
 
 int ClientThread::sendString(QString mes){
@@ -248,7 +249,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         }
         if (bytearray.contains("QUIT")){
             sendString(FTPProtocol::getInstance()->getResponse(221));
-            terminate();
+            closeconnection();
             return;
         }
         if (bytearray.contains("CDUP")){

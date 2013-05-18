@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 17. May 23:43:54 2013
+** Created: Sat 18. May 17:52:24 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -17,6 +17,7 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QLCDNumber>
 #include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
@@ -41,6 +42,7 @@ public:
     QAction *actionAbout;
     QAction *action;
     QWidget *centralWidget;
+    QVBoxLayout *verticalLayout_4;
     QVBoxLayout *verticalLayout;
     QTabWidget *tabWidget;
     QWidget *tab;
@@ -50,6 +52,9 @@ public:
     QPushButton *start;
     QPushButton *stop;
     QPushButton *clearLogBtn;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label_2;
+    QLCDNumber *clientslcd;
     QWidget *tab_2;
     QVBoxLayout *verticalLayout_3;
     QCheckBox *Utf8Cb;
@@ -92,9 +97,12 @@ public:
         action->setObjectName(QString::fromUtf8("action"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        verticalLayout = new QVBoxLayout(centralWidget);
+        verticalLayout_4 = new QVBoxLayout(centralWidget);
+        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
+        verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         tabWidget = new QTabWidget(centralWidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
@@ -132,6 +140,26 @@ public:
         clearLogBtn->setIcon(icon4);
 
         verticalLayout_2->addWidget(clearLogBtn);
+
+        horizontalLayout_2 = new QHBoxLayout();
+        horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        label_2 = new QLabel(tab);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setMaximumSize(QSize(1000, 100));
+
+        horizontalLayout_2->addWidget(label_2);
+
+        clientslcd = new QLCDNumber(tab);
+        clientslcd->setObjectName(QString::fromUtf8("clientslcd"));
+        clientslcd->setMaximumSize(QSize(64, 64));
+        clientslcd->setLayoutDirection(Qt::RightToLeft);
+        clientslcd->setAutoFillBackground(false);
+
+        horizontalLayout_2->addWidget(clientslcd);
+
+
+        verticalLayout_2->addLayout(horizontalLayout_2);
 
 
         horizontalLayout->addLayout(verticalLayout_2);
@@ -212,6 +240,9 @@ public:
 
         verticalLayout->addWidget(statusLabel);
 
+
+        verticalLayout_4->addLayout(verticalLayout);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -252,6 +283,7 @@ public:
         start->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", 0, QApplication::UnicodeUTF8));
         stop->setText(QApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\201\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         clearLogBtn->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\273\320\276\320\263", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "\320\247\320\270\321\201\320\273\320\276 \320\272\320\273\320\270\320\265\320\275\321\202\320\276\320\262", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "\320\233\320\276\320\263", 0, QApplication::UnicodeUTF8));
         Utf8Cb->setText(QApplication::translate("MainWindow", "\320\237\321\200\320\270\320\275\321\203\320\264\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\271 UTF-8", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\273\321\214\320\267\320\276\320\262\320\260\321\202\320\265\320\273\320\270", 0, QApplication::UnicodeUTF8));

@@ -26,10 +26,12 @@ signals:
     void onError(QString);
     void onClose(QString);
     void onEvent(QString);
+    void clientschanged(int count);
 public slots:
     void started();
     void stoped();
     void newconnection(const QString&);
+    void connectionclosed();
     void servererror(const QString&);
 
 private:
