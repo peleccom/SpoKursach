@@ -9,7 +9,7 @@
 #define MAX_CLIENTS 100
 #include <QList>
 
-class FTPCore : public QObject
+class FTPCore : public QThread
 {
     Q_OBJECT
 public:
@@ -25,7 +25,6 @@ signals:
 public slots:
      void run();
      void stop();
-     void connectionclosed();
 private:
 
     bool InitWinsock();

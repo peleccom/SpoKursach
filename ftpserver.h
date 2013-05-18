@@ -37,7 +37,6 @@ public slots:
 private:
     STATUS mSTATUS;
     FTPCore *ftpcore;
-    QThread *mainthread;
     int clients_count;
 
 

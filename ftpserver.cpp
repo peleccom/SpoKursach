@@ -13,17 +13,13 @@ FtpServer::FtpServer(QObject *parent) :
 void FtpServer::start(){
     // create ftp thread
     if (mSTATUS == STOPED){
-        mainthread = new QThread();
         ftpcore = new FTPCore();
-        QObject::connect(mainthread, SIGNAL(started()), ftpcore, SLOT(run()));
-        QObject::connect(ftpcore, SIGNAL(onstopped()),mainthread,SLOT(quit()));
         QObject::connect(ftpcore, SIGNAL(onstarted()),  SLOT(started()));
         QObject::connect(ftpcore, SIGNAL(onstopped()), SLOT(stoped()));
         QObject::connect(ftpcore, SIGNAL(onnewconnection(const QString&)), SLOT(newconnection(const QString&)));
         QObject::connect(ftpcore, SIGNAL(onerror(const QString&)), SLOT(servererror(const QString&)));
         QObject::connect(ftpcore,SIGNAL(oncloseconnection()),SLOT(connectionclosed()));
-        ftpcore->moveToThread(mainthread);
-        mainthread->start();
+        ftpcore->start();
         mSTATUS = STARTING;
 
     }
@@ -55,11 +51,9 @@ void FtpServer::stoped(){
    emit onClose("Сервер остановлен");
    mSTATUS = STOPED;
    clients_count = 0;
-   mainthread->wait();
+   ftpcore->wait();
    delete ftpcore;
-   delete mainthread;
    ftpcore = NULL;
-   mainthread = NULL;
 }
 
 void FtpServer::newconnection(const QString& ip){
@@ -87,6 +81,7 @@ STATUS FtpServer::getStatus(){
 
 
 void FtpServer::connectionclosed(){
+    emit onEvent("Соединение с клиентом закрыто");
     clients_count--;
     emit clientschanged(clients_count);
 }

@@ -1,7 +1,7 @@
 #include "ftpcore.h"
 
 FTPCore::FTPCore(QObject *parent) :
-    QObject(parent)
+    QThread(parent)
 {
     terminated = false;
 }
@@ -89,7 +89,7 @@ void FTPCore::run(){
 
                 clientthread = new ClientThread(client_socket);
                 connections.append(clientthread);
-                connect(clientthread, SIGNAL(oncloseconnection()),SLOT(connectionclosed()),Qt::QueuedConnection);
+                connect(clientthread, SIGNAL(oncloseconnection()),SIGNAL(oncloseconnection()));
                  clientthread->start();
            }
             if (terminated){
@@ -127,9 +127,4 @@ bool FTPCore::InitWinsock(){
     }
     qDebug() << "Winsock started";
     return true;
-}
-
-
-void FTPCore::connectionclosed(){
-    emit oncloseconnection();
 }
