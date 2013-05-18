@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 18. May 17:52:24 2013
+** Created: Sat 18. May 19:08:24 2013
 **      by: Qt User Interface Compiler version 4.7.4
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -226,10 +226,13 @@ public:
 
         verticalLayout->addWidget(tabWidget);
 
+
+        verticalLayout_4->addLayout(verticalLayout);
+
         statusLabel = new QLabel(centralWidget);
         statusLabel->setObjectName(QString::fromUtf8("statusLabel"));
         statusLabel->setEnabled(true);
-        statusLabel->setMaximumSize(QSize(64, 64));
+        statusLabel->setMaximumSize(QSize(32, 32));
         statusLabel->setLayoutDirection(Qt::RightToLeft);
         statusLabel->setFrameShadow(QFrame::Sunken);
         statusLabel->setLineWidth(5);
@@ -238,10 +241,7 @@ public:
         statusLabel->setScaledContents(true);
         statusLabel->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
 
-        verticalLayout->addWidget(statusLabel);
-
-
-        verticalLayout_4->addLayout(verticalLayout);
+        verticalLayout_4->addWidget(statusLabel);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
@@ -283,7 +283,7 @@ public:
         start->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\277\321\203\321\201\320\272 \321\201\320\265\321\200\320\262\320\265\321\200\320\260", 0, QApplication::UnicodeUTF8));
         stop->setText(QApplication::translate("MainWindow", "\320\236\321\201\321\202\320\260\320\275\320\276\320\262\320\270\321\202\321\214 \321\201\320\265\321\200\320\262\320\265\321\200", 0, QApplication::UnicodeUTF8));
         clearLogBtn->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \320\273\320\276\320\263", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("MainWindow", "\320\247\320\270\321\201\320\273\320\276 \320\272\320\273\320\270\320\265\320\275\321\202\320\276\320\262", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "\320\220\320\272\321\202\320\270\320\262\320\275\321\213\321\205 \320\272\320\273\320\270\320\265\320\275\321\202\320\276\320\262", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("MainWindow", "\320\233\320\276\320\263", 0, QApplication::UnicodeUTF8));
         Utf8Cb->setText(QApplication::translate("MainWindow", "\320\237\321\200\320\270\320\275\321\203\320\264\320\270\321\202\320\265\320\273\321\214\320\275\321\213\320\271 UTF-8", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\273\321\214\320\267\320\276\320\262\320\260\321\202\320\265\320\273\320\270", 0, QApplication::UnicodeUTF8));

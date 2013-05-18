@@ -84,12 +84,12 @@ void FTPCore::run(){
                 client_socket=accept(msocket, (sockaddr *)&client_addr, &client_addr_size);
                 //plususer();      // óâåëè÷èâàåì ñ÷åò÷èê
                          // ïîäêëş÷èâøèõñÿ êëèåíòîâ
+                QString clientAddr = QString("%1:%2").arg(inet_ntoa(client_addr.sin_addr)).arg(client_addr.sin_port);
+                emit onnewconnection(clientAddr);
 
-                emit onnewconnection(QString("%1:%2").arg(inet_ntoa(client_addr.sin_addr)).arg(client_addr.sin_port));
-
-                clientthread = new ClientThread(client_socket);
+                clientthread = new ClientThread(client_socket, clientAddr);
                 connections.append(clientthread);
-                connect(clientthread, SIGNAL(oncloseconnection()),SIGNAL(oncloseconnection()));
+                connect(clientthread, SIGNAL(oncloseconnection(QString)),SIGNAL(oncloseconnection(QString)));
                  clientthread->start();
            }
             if (terminated){

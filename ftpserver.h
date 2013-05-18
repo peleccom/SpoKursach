@@ -31,7 +31,7 @@ public slots:
     void started();
     void stoped();
     void newconnection(const QString&);
-    void connectionclosed();
+    void connectionclosed(const QString&);
     void servererror(const QString&);
 
 private:

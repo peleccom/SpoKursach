@@ -13,19 +13,20 @@ class ClientThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ClientThread(SOCKET client_socket, QObject *parent = 0);
+    explicit ClientThread(SOCKET client_socket, const QString &clientAddr, QObject *parent = 0);
     ~ClientThread();
     void run();
 
 signals:
     void onerror(const QString &);
     void onlog(const QString &);
-    void oncloseconnection();
+    void oncloseconnection(const QString &clientAddr);
 public slots:
     void closeconnection();
 private:
     SOCKET mSocket;
     SOCKET mPassiveDataSocket;
+    QString mClientAddr;
     bool mTerminated;
     bool mIsUserAuthenticated;
     bool mIsActiveMode;

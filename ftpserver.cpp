@@ -18,7 +18,7 @@ void FtpServer::start(){
         QObject::connect(ftpcore, SIGNAL(onstopped()), SLOT(stoped()));
         QObject::connect(ftpcore, SIGNAL(onnewconnection(const QString&)), SLOT(newconnection(const QString&)));
         QObject::connect(ftpcore, SIGNAL(onerror(const QString&)), SLOT(servererror(const QString&)));
-        QObject::connect(ftpcore,SIGNAL(oncloseconnection()),SLOT(connectionclosed()));
+        QObject::connect(ftpcore,SIGNAL(oncloseconnection(QString)),SLOT(connectionclosed(QString)));
         ftpcore->start();
         mSTATUS = STARTING;
 
@@ -56,8 +56,8 @@ void FtpServer::stoped(){
    ftpcore = NULL;
 }
 
-void FtpServer::newconnection(const QString& ip){
-    emit onEvent("Новое подключение ip: " + ip);
+void FtpServer::newconnection(const QString& clientAddr){
+    emit onEvent(clientAddr+ " - новое подключение");
     clients_count++;
     emit clientschanged(clients_count);
 }
@@ -80,8 +80,8 @@ STATUS FtpServer::getStatus(){
 }
 
 
-void FtpServer::connectionclosed(){
-    emit onEvent("Соединение с клиентом закрыто");
+void FtpServer::connectionclosed(const QString& clientAddr){
+    emit onEvent(clientAddr + " - cоединение с клиентом закрыто");
     clients_count--;
     emit clientschanged(clients_count);
 }

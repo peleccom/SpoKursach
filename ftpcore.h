@@ -21,7 +21,7 @@ signals:
     void onstopped();
     void onerror(const QString& s);
     void onnewconnection(const QString& ip);
-    void oncloseconnection();
+    void oncloseconnection(const QString &clientAddr);
 public slots:
      void run();
      void stop();

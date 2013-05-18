@@ -1,6 +1,6 @@
 #include "clientthread.h"
 #include "clientrecvexception.h"
-ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
+ClientThread::ClientThread(SOCKET client_socket, const QString &clientAddr, QObject *parent) :
     QThread(parent)
 {
     mSocket = client_socket;
@@ -10,6 +10,7 @@ ClientThread::ClientThread(SOCKET client_socket, QObject *parent) :
     mIsUTF8 = Settings::getInstance()->getForceUtf8();
     mPassiveDataSocket = INVALID_SOCKET;
     mRenameBeginned = false;
+    mClientAddr = clientAddr;
 }
 
 
@@ -50,7 +51,7 @@ void ClientThread::run(){
     // закрываем сокет
     closesocket(mSocket);
     qDebug() << "Close client";
-    emit oncloseconnection();
+    emit oncloseconnection(mClientAddr);
 }
 
 void ClientThread::closeconnection(){
