@@ -27,7 +27,7 @@ void ClientThread::run(){
     u_long flag = 0;
     ioctlsocket(mSocket, FIONBIO, &flag);
     // отправл€ем клиенту приветствие
-    sendString(FTPProtocol::getInstance()->getResponse(220,""));
+    sendString(FTPProtocol::getInstance()->getResponse(220,"FtpServer. Hello"));
 
     while(true)
     {
@@ -42,12 +42,6 @@ void ClientThread::run(){
             break;
         }
     }
-    // если мы здесь, то произошел выход из цикла по
-    // причине возращени€ функцией recv ошибки Ц
-    // соединение клиентом разорвано
-    //nclients--; // уменьшаем счетчик активных клиентов
-   // printf("-disconnect\n"); PRINTNUSERS
-
     // закрываем сокет
     closesocket(mSocket);
     qDebug() << "Close client";
@@ -83,7 +77,6 @@ void ClientThread::sendList()
     int sendBytes;
     QByteArray ba = toEncoding(s);
     const char* buf = ba.constData();
-    qDebug()<< ba.size();
     int size = ba.size();
     int bytesToSend;
     do
@@ -105,7 +98,6 @@ QString ClientThread::recvString(){
       char buff[BUF_LENGTH];
       int bytesreaded;
       bytesreaded = recv(mSocket,buff, BUF_LENGTH,0);
-      qDebug() << bytesreaded;
       if (bytesreaded != SOCKET_ERROR){
           buff[bytesreaded] = '\0';
           return QString(buff);

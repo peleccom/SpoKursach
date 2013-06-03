@@ -22,15 +22,6 @@ User::User(const QString &userName, const QString &passHash, const QString &fold
     }
 }
 
-User::User(const QString &userName){
-    mIsBad = false;
-    mIsAuth = false;
-
-    mUserName = userName;
-    mPassswordHash = getHash("sasha");
-    mIsAnonymousAccessed = true;
-}
-
 QString User::getName() const{
     return mUserName;
 }

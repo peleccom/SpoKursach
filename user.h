@@ -22,7 +22,6 @@ public:
     bool auth(const QString &pass);
     bool isNull();
     bool isAuth();
-    // to friend
     QString getFolder();
     QString getPasswordHash();
     FileAccess getFileAccess();
@@ -30,7 +29,6 @@ private:
     friend class Settings;
     friend class EditUserDialog;
     User(const QString &userName, const QString &passHash, const QString &folder, FileAccess fileAccess);
-    User(const QString &userName);
     QString mUserName;
     QString mPassswordHash;
     QString mFolder;

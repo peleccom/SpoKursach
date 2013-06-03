@@ -40,7 +40,7 @@ QString FtpFileSystem::listDir(){
          QString sfileSize = fileInfo.isDir()?"512":QString::number(fileInfo.size());
          QDateTime dt = fileInfo.lastModified();
          QString lastModified = formatDate(dt);
-         qDebug() << fileInfo.fileName();
+//         qDebug() << fileInfo.fileName();
          buffer = buffer % QString("%1%5%6-r--r-- 1 root root %2 %3 %4\r\n").arg(dirLabel).arg(sfileSize).arg(lastModified).arg(fileInfo.fileName())
                 .arg(readable?"r":"-").arg(writable?"w":"-");
     }

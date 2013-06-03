@@ -15,7 +15,6 @@ class ClientThread : public QThread
 public:
     explicit ClientThread(SOCKET client_socket, const QString &clientAddr, QObject *parent = 0);
     ~ClientThread();
-    void run();
 
 signals:
     void onerror(const QString &);
@@ -38,6 +37,7 @@ private:
     User mUser;
     FtpFileSystem *ftpFileSystem;
     int active_port;
+    void run();
     int sendString(QString mes);
     QString recvString();
     void analizeCommand(QByteArray&);
