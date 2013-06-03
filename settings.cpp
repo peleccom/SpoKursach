@@ -23,8 +23,6 @@ Settings::Settings()
     fileAccess.adelete = false;
     fileAccess.aread = true;
     fileAccess.awrite = true;
-    users.append(User("sasha","sasha","D://Films",fileAccess));
-    users.append(User("sasdsda","ssdha","C:/tmp",fileAccess));
 }
 
 bool Settings::parseBool(const QString &value){

@@ -82,8 +82,6 @@ void FTPCore::run(){
             if ((res!=0) && (FD_ISSET (msocket, &read_s)) ) // Использую FD_ISSET только для примера! :)
             {
                 client_socket=accept(msocket, (sockaddr *)&client_addr, &client_addr_size);
-                //plususer();      // увеличиваем счетчик
-                         // подключившихся клиентов
                 QString clientAddr = QString("%1:%2").arg(inet_ntoa(client_addr.sin_addr)).arg(client_addr.sin_port);
                 emit onnewconnection(clientAddr);
 
