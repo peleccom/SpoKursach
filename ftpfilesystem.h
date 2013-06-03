@@ -18,6 +18,7 @@ public:
     QString getFileRead(const QString &filename);
     QString getFileWrite(const QString &filename);
     bool deleteFile(const QString &filename);
+    bool removeDir(const QString &dirname);
     bool mkDir(const QString &filename);
     bool getSize(const QString &filename, qint64 *size);
     QString getLastModified(const QString &filename);

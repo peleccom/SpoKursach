@@ -142,7 +142,7 @@ void MainWindow::updateUserTable(){
 
 }
 
-bool MainWindow::changeUTF8Flag(bool value){
+void MainWindow::changeUTF8Flag(bool value){
     Settings::getInstance()->setForceUtf8(value);
 }
 

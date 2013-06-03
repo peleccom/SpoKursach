@@ -119,6 +119,18 @@ bool FtpFileSystem::deleteFile(const QString &filename){
     return false;
 }
 
+bool FtpFileSystem::removeDir(const QString &dirname){
+    QString fullFileName = getFileFullPath(dirname);
+    QDir d(fullFileName);
+    if (isDeleteable(dirname)){
+        if (d.exists())
+        {
+            return d.rmdir(fullFileName);
+        }
+    }
+    return false;
+}
+
 bool FtpFileSystem::mkDir(const QString &filename){
 
      QString fullDirPath = getFileFullPath(filename);

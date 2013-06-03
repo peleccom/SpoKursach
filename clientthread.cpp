@@ -294,6 +294,16 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             }
             return;
         }
+        if (bytearray.contains("RMD")){
+            QRegExp rx("^RMD\\s(.*)\r\n");
+            rx.indexIn(fromEncoding(bytearray));
+            QString filename = rx.cap(1);
+            if (ftpFileSystem->removeDir(filename))
+                sendString(FTPProtocol::getInstance()->getResponse(250));
+            else
+                sendString(FTPProtocol::getInstance()->getResponse(550));
+            return;
+        }
         if (bytearray.contains("DELE")){
             QRegExp rx("^DELE\\s(.*)\r\n");
             rx.indexIn(fromEncoding(bytearray));
@@ -354,7 +364,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             rx.indexIn(fromEncoding(bytearray));
             mRenameOldName = rx.cap(1);
 
-            if (ftpFileSystem->exist(mRenameOldName) && ftpFileSystem->isWritable(mRenameOldName) != NULL)
+            if (ftpFileSystem->exist(mRenameOldName) && ftpFileSystem->isWritable(mRenameOldName))
             {
                 sendString(FTPProtocol::getInstance()->getResponse(350));
                 mRenameBeginned = true;

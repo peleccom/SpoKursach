@@ -35,7 +35,7 @@ public slots:
      void edituser();
      void adduser();
      void deleteuser();
-     bool changeUTF8Flag(bool);
+     void changeUTF8Flag(bool);
      void showAbout();
      void serverstarted();
      void serverstopped();
