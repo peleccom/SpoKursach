@@ -527,7 +527,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
        mPassiveDataSocket = INVALID_SOCKET;
        for (int port = BEGIN_DATA_PORT; port < END_DATA_PORT; port++)
        {
-           if ( SOCKET_ERROR == (conn=socket(AF_INET,SOCK_STREAM,0)))
+           if ( INVALID_SOCKET  == (conn=socket(AF_INET,SOCK_STREAM,0)))
                {
 
                     continue;
