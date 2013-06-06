@@ -32,12 +32,15 @@ void ClientThread::run(){
     while(true)
     {
         QString s = recvString();
-        qDebug() << "<<" << s.trimmed();
         if (s == NULL)
             break;
-        QByteArray array (s.toStdString().c_str());
-        analizeCommand(array);
-
+        s = s.trimmed();
+        if (!s.isEmpty())
+        {
+            qDebug() << "<<" << s;
+            QByteArray array (s.toStdString().c_str());
+            analizeCommand(array);
+        }
         if (mTerminated){
             break;
         }
@@ -112,7 +115,7 @@ QString ClientThread::recvString(){
 void ClientThread::analizeCommand(QByteArray &bytearray){
     QString userName;
     if (bytearray.contains("USER")) {
-        QRegExp rx("^USER\\s(.*)\r\n");
+        QRegExp rx("^USER\\s(.*)");
         rx.indexIn(bytearray);
         userName = rx.cap(1);
         mUser = User::getUser(userName);
@@ -121,7 +124,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
     }
 
     if (bytearray.contains("PASS")) {
-        QRegExp rx("^PASS\\s(.*)\r\n");
+        QRegExp rx("^PASS\\s(.*)");
         rx.indexIn(bytearray);
         QString pass = rx.cap(1);
         if (mUser.isNull())
@@ -152,7 +155,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
         // RNFR -> RNTO sequence
         if (mRenameBeginned){
             if (bytearray.contains("RNTO")){
-                QRegExp rx("^RNTO\\s(.*)\r\n");
+                QRegExp rx("^RNTO\\s(.*)");
                 rx.indexIn(fromEncoding(bytearray));
                 QString newName = rx.cap(1);
                 mRenameBeginned = false;
@@ -253,7 +256,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("CWD")){
-            QRegExp rx("^CWD\\s(.*)\r\n");
+            QRegExp rx("^CWD\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString subFolder = rx.cap(1);
             if (ftpFileSystem->changeDir(subFolder))
@@ -263,7 +266,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("RETR")){
-            QRegExp rx("^RETR\\s(.*)\r\n");
+            QRegExp rx("^RETR\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             QString fullFileName = ftpFileSystem->getFileRead(filename);
@@ -279,7 +282,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("STOR")){
-            QRegExp rx("^STOR\\s(.*)\r\n");
+            QRegExp rx("^STOR\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             QString fullFileName = ftpFileSystem->getFileWrite(filename);
@@ -295,7 +298,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("RMD")){
-            QRegExp rx("^RMD\\s(.*)\r\n");
+            QRegExp rx("^RMD\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             if (ftpFileSystem->removeDir(filename))
@@ -305,7 +308,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("DELE")){
-            QRegExp rx("^DELE\\s(.*)\r\n");
+            QRegExp rx("^DELE\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString filename = rx.cap(1);
             if (ftpFileSystem->deleteFile(filename))
@@ -315,7 +318,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("MKD")){
-            QRegExp rx("^MKD\\s(.*)\r\n");
+            QRegExp rx("^MKD\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString dirName = rx.cap(1);
             if (ftpFileSystem->mkDir(dirName))
@@ -330,7 +333,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("SIZE")){
-            QRegExp rx("^SIZE\\s(.*)\r\n");
+            QRegExp rx("^SIZE\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString fileName = rx.cap(1);
             qint64 size;
@@ -345,7 +348,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("MDTM")){
-            QRegExp rx("^MDTM\\s(.*)\r\n");
+            QRegExp rx("^MDTM\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             QString fileName = rx.cap(1);
             QString sdate = ftpFileSystem->getLastModified(fileName);
@@ -360,7 +363,7 @@ void ClientThread::analizeCommand(QByteArray &bytearray){
             return;
         }
         if (bytearray.contains("RNFR")){
-            QRegExp rx("^RNFR\\s(.*)\r\n");
+            QRegExp rx("^RNFR\\s(.*)");
             rx.indexIn(fromEncoding(bytearray));
             mRenameOldName = rx.cap(1);
 
