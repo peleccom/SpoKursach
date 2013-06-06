@@ -19,7 +19,7 @@ void FTPCore::run(){
         emit onstopped();
         return;
     }
-    if ( SOCKET_ERROR == (msocket=socket(AF_INET,SOCK_STREAM,0)))
+    if ( INVALID_SOCKET == (msocket=socket(AF_INET,SOCK_STREAM,0)))
         {
           emit onerror("Error socket " + QString("%1").arg(WSAGetLastError()));
           WSACleanup();
