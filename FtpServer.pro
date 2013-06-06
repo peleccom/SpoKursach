@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     ftpprotocol.cpp \
     edituserdialog.cpp \
     ftpfilesystem.cpp \
-    filetransferthread.cpp \
     user.cpp \
     settings.cpp
 
@@ -33,7 +32,6 @@ HEADERS  += mainwindow.h \
     ftpprotocol.h \
     edituserdialog.h \
     ftpfilesystem.h \
-    filetransferthread.h \
     user.h \
     settings.h
 
@@ -43,6 +41,8 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 RC_FILE = myapp.rc
+
+
 
 
 
