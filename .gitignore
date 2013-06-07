@@ -25,4 +25,5 @@ object_script*
 
 #programm files
 settings.xml
-ui_mainwindow.h
+ui_*.h
+
