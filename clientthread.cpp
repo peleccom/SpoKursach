@@ -1,5 +1,4 @@
 #include "clientthread.h"
-#include "clientrecvexception.h"
 ClientThread::ClientThread(SOCKET client_socket, const QString &clientAddr, QObject *parent) :
     QThread(parent)
 {
